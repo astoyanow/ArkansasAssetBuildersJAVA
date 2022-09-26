@@ -10,8 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="546b539e-aafc-4a87-a1bc-2c025bbd3c50" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/aab/arkansasassetbuilders/ArkansasAssetBuilders.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/aab/arkansasassetbuilders/UploadScreen.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/launcher.bat" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +27,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -46,16 +52,16 @@
     <option name="showMembers" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/JavaFX/javafx-sdk-18.0.2/bin",
-    "project.structure.last.edited": "Artifacts",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/JavaFX/javafx-sdk-18.0.2/bin&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\astoy\Documents\GitHub\ArkansasAssetBuildersJAVA\ArkansasAssetBuilders" />
@@ -92,7 +98,7 @@
     <configuration name="launcher (1)" type="BatchConfigurationType" factoryName="Batch" temporary="true">
       <module name="ArkansasAssetBuilders" />
       <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="WORKING_DIRECTORY" value="C:\Users\astoy\Documents\GitHub\ArkansasAssetBuildersJAVA\ArkansasAssetBuilders" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SCRIPT_NAME" value="launcher.bat" />
       <option name="PARAMETERS" value="" />
