@@ -28,6 +28,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="xerial.sqlite.jdbc1" level="application" />
+    <orderEntry type="library" name="xerial.sqlite.jdbc" level="application" />
   </component>
 </module>

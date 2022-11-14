@@ -147,13 +147,63 @@ public class DemographicDAO {
      * @param Address String, address that the old address will be changed to.
      * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
      */
-    private static void updateAddress(String demographicID, String Address) throws SQLException{
+    public static void updateAddress(String demographicID, String Address) throws SQLException{
         String updateStmt =
-                "Begin\n" +
-                        "   UPDATE Demographic\n" +
-                        "       SET Address = '" + Address + "'\n" +
-                        "    WHERE ID = " + demographicID + ";\n" +
-                        "END;";
+                        "UPDATE Demographic\n" +
+                        "SET Address = '" + Address + "'\n" +
+                        "WHERE Client_ID = '" + demographicID + "';";
+        try{
+            DB.update(updateStmt);
+        }catch(Exception e){
+            System.out.print("Error occurred while UPDATE Operation: " + e);
+            throw e;
+        }
+    }
+
+    public static void updateZip(String demographicID, String zip) throws SQLException{
+        String updateStmt =
+                        "UPDATE Demographic\n" +
+                        "SET Zip = " + zip + "\n" +
+                        "WHERE Client_ID = '" + demographicID + "';";
+        try{
+            DB.update(updateStmt);
+        }catch(Exception e){
+            System.out.print("Error occurred while UPDATE Operation: " + e);
+            throw e;
+        }
+    }
+
+    public static void updateCounty(String demographicID, String county) throws SQLException{
+        String updateStmt =
+                        "UPDATE Demographic\n" +
+                        "SET County = '" + county + "'\n" +
+                        "WHERE Client_ID = '" + demographicID + "';";
+        try{
+            DB.update(updateStmt);
+        }catch(Exception e){
+            System.out.print("Error occurred while UPDATE Operation: " + e);
+            throw e;
+        }
+    }
+
+    public static void updateState(String demographicID, String state) throws SQLException{
+        String updateStmt =
+                        "UPDATE Demographic\n" +
+                        "SET State = '" + state + "'\n" +
+                        "WHERE Client_ID = '" + demographicID + "';";
+        try{
+            DB.update(updateStmt);
+        }catch(Exception e){
+            System.out.print("Error occurred while UPDATE Operation: " + e);
+            throw e;
+        }
+    }
+
+    public static void updateTaxYear(String demographicID, String taxYear) throws SQLException{
+        String updateStmt =
+                        "UPDATE Demographic\n" +
+                        "SET TaxYear = " + taxYear + "\n" +
+                        "WHERE Client_ID = '" + demographicID + "';";
         try{
             DB.update(updateStmt);
         }catch(Exception e){

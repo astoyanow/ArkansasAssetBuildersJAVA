@@ -82,16 +82,92 @@ public class ReturnDataDAO {
     /**
      * Update Dependents of a ReturnData object.
      * @param returnDataID String, the ID of the ReturnData object.
-     * @param Dependents String, dependents that the old dependents will be changed to.
+     * @param taxYear String, tax year that the old tax year will be changed to.
      * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
      */
-    private static void updateDependents(String returnDataID, String Dependents) throws SQLException{
+    public static void updateTaxYear(String returnDataID, String taxYear) throws SQLException{
         String updateStmt =
-                "Begin\n" +
-                        "   UPDATE ReturnData\n" +
-                        "       SET Dependents = '" + Dependents + "'\n" +
-                        "    WHERE ID = " + returnDataID + ";\n" +
-                        "END;";
+                        "UPDATE ReturnData\n" +
+                        "SET TaxYear = " + taxYear + "\n" +
+                        "WHERE Client_ID = '" + returnDataID + "';";
+        try{
+            DB.update(updateStmt);
+        }catch(Exception e){
+            System.out.print("Error occurred while UPDATE Operation: " + e);
+            throw e;
+        }
+    }
+
+    public static void updateFederalReturn(String returnDataID, String federalReturn) throws SQLException{
+        String updateStmt =
+                        "UPDATE ReturnData\n" +
+                        "SET FederalReturn = " + federalReturn + "\n" +
+                        "WHERE Client_ID = '" + returnDataID + "';";
+        try{
+            DB.update(updateStmt);
+        }catch(Exception e){
+            System.out.print("Error occurred while UPDATE Operation: " + e);
+            throw e;
+        }
+    }
+
+    public static void updateTotalRefund(String returnDataID, String totalRefund) throws SQLException{
+        String updateStmt =
+                        "UPDATE ReturnData\n" +
+                        "SET TotalRefund = " + totalRefund + "\n" +
+                        "WHERE Client_ID = '" + returnDataID + "';";
+        try{
+            DB.update(updateStmt);
+        }catch(Exception e){
+            System.out.print("Error occurred while UPDATE Operation: " + e);
+            throw e;
+        }
+    }
+
+    public static void updateEITC(String returnDataID, String EITC) throws SQLException{
+        String updateStmt =
+                        "UPDATE ReturnData\n" +
+                        "SET EITC = " + EITC + "\n" +
+                        "WHERE Client_ID = '" + returnDataID + "';";
+        try{
+            DB.update(updateStmt);
+        }catch(Exception e){
+            System.out.print("Error occurred while UPDATE Operation: " + e);
+            throw e;
+        }
+    }
+
+    public static void updateCTC(String returnDataID, String CTC) throws SQLException{
+        String updateStmt =
+                        "UPDATE ReturnData\n" +
+                        "SET CTC = " + CTC + "\n" +
+                        "WHERE Client_ID = '" + returnDataID + "';";
+        try{
+            DB.update(updateStmt);
+        }catch(Exception e){
+            System.out.print("Error occurred while UPDATE Operation: " + e);
+            throw e;
+        }
+    }
+
+    public static void updateDependents(String returnDataID, String dependents) throws SQLException{
+        String updateStmt =
+                        "UPDATE ReturnData\n" +
+                        "SET Dependents = " + dependents + "\n" +
+                        "WHERE Client_ID = '" + returnDataID + "';";
+        try{
+            DB.update(updateStmt);
+        }catch(Exception e){
+            System.out.print("Error occurred while UPDATE Operation: " + e);
+            throw e;
+        }
+    }
+
+    public static void updateSurveyScore(String returnDataID, String surveyScore) throws SQLException{
+        String updateStmt =
+                        "UPDATE ReturnData\n" +
+                        "SET SurveyScore = " + surveyScore + "\n" +
+                        "WHERE Client_ID = '" + returnDataID + "';";
         try{
             DB.update(updateStmt);
         }catch(Exception e){

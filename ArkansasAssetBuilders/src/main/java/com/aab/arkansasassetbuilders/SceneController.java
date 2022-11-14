@@ -9,14 +9,18 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import model.DataBase;
+import parsing.FileParser;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 
-public class SceneControler {
+public class SceneController {
     private Desktop desktop = Desktop.getDesktop();
     private Stage stage;
     private Scene scene;
@@ -34,7 +38,7 @@ public class SceneControler {
     } // for button to take you to upload screen
 
     public void switchToFilter(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Search-and-filter-screen.fxml")));
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("HelloScreen.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -56,9 +60,27 @@ public class SceneControler {
         System.out.println(file);
 
     }
+
+    @FXML
+    private void saveFile() {
+        try{
+            if (file.exists()){
+                FileParser parser = new FileParser(file);
+                Map<String, HashMap<String, String>> data = parser.data;
+                for (String key: data.keySet()){
+                    DataBase.insertClient(data.get(key), key);
+                    DataBase.insertDemographic(data.get(key), key);
+                    DataBase.insertReturnData(data.get(key), key);
+                    DataBase.insertTaxYear(data.get(key));
+                }
+            }
+        }catch (IOException e){
+            System.err.println(e);
+        }
+    }
     // dont need this unless you want it to open the file that you selected
     /*
-    private void openFile(File file) { // this is witch craft that I found on the internet
+    private void openFile(File file) { // this is witchcraft that I found on the internet
         try {
             desktop.open(file);
         } catch (IOException ex) {

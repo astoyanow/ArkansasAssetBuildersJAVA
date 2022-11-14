@@ -11,6 +11,6 @@ public class Launcher {
         // Replace "Main" with the name of the class that extends Application
         // See https://stackoverflow.com/a/52654791/3956070 for explanation
         //searchAndFilterControler.main(args);
-        searchAndFilterLauncher.main(args);
+        UploadScreenLauncher.main(args);
     }
 }

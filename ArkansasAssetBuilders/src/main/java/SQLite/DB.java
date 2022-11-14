@@ -42,7 +42,7 @@ public class DB {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
             System.exit(0);
         }
-        System.out.println("Opened database successfully");
+        System.out.println("Opened database successfully.");
     }
 
     /**
@@ -59,6 +59,7 @@ public class DB {
         }catch(Exception e){
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         }
+        System.out.println("Closed database successfully.");
     }
 
     /**

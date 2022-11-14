@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.aab.arkansasassetbuilders.HelloController">
+<StackPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.aab.arkansasassetbuilders.HelloController">
    <children>
       <BorderPane fx:id="filterMenu" prefHeight="200.0" prefWidth="200.0" visible="false">
          <bottom>
@@ -159,5 +159,10 @@
             </VBox>
          </center>
       </BorderPane>
+      <Button fx:id="backToHomeButton" mnemonicParsing="false" onAction="#switchToUpload" text="Back to Home" StackPane.alignment="BOTTOM_RIGHT">
+         <StackPane.margin>
+            <Insets bottom="20.0" right="110.0" />
+         </StackPane.margin>
+      </Button>
    </children>
 </StackPane>

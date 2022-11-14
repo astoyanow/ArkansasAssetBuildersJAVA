@@ -34,6 +34,54 @@ class DataBaseTest {
         }
         DB.isTest = false;
     }
+    @Test
+    void insertDemographic(){
+        String clientID = "A1234";
+        HashMap<String, String> clientProperties = data.get(clientID);
+        DB.isTest = true;
+        DataBase.insertDemographic(clientProperties, clientID);
+        try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM Demographic WHERE Client_ID = '%s';", clientID))) {
+            assertTrue(query.next());
+            query.beforeFirst();
+        }catch (Exception e){
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            System.exit(0);
+        }
+        DB.isTest = false;
+    }
+
+    @Test
+    void insertReturnData(){
+        String clientID = "A1234";
+        HashMap<String, String> clientProperties = data.get(clientID);
+        DB.isTest = true;
+        DataBase.insertReturnData(clientProperties, clientID);
+        try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM ReturnData WHERE Client_ID = '%s';", clientID))) {
+            assertTrue(query.next());
+            query.beforeFirst();
+        }catch (Exception e){
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            System.exit(0);
+        }
+        DB.isTest = false;
+    }
+
+    @Test
+    void insertTaxYear(){
+        String clientID = "A1234";
+        HashMap<String, String> clientProperties = data.get(clientID);
+        DB.isTest = true;
+        DataBase.insertTaxYear(clientProperties);
+        String year = clientProperties.get("CREATEDDATETIME").substring(0, 4);
+        try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM TaxYear WHERE TaxYear = %s;", year))) {
+            assertTrue(query.next());
+            query.beforeFirst();
+        }catch (Exception e){
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            System.exit(0);
+        }
+        DB.isTest = false;
+    }
 
     @Test
     void searchClients() {

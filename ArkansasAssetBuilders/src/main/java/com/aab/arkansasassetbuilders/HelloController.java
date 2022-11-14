@@ -4,12 +4,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import model.*;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class HelloController {
 
@@ -33,6 +40,9 @@ public class HelloController {
 
     @FXML
     private Button filterButton;
+
+    @FXML
+    private Button backToHomeButton;
 
     @FXML
     private TextField name;
@@ -136,6 +146,14 @@ public class HelloController {
         last4ssColumn.setCellValueFactory(cellData -> cellData.getValue().last4SSProperty().asObject());
     }
 
+    public void switchToUpload(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("UploadScreen.fxml")));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     @FXML
     private void searchClient(ActionEvent actionEvent) throws ClassNotFoundException, SQLException{
         try{
@@ -237,6 +255,7 @@ public class HelloController {
         //resultsView.setDisable(true);
         filterMenu.setVisible(true);
         //filterMenu.setDisable(false);
+        backToHomeButton.setVisible(false);
     }
 
     /**
@@ -251,6 +270,7 @@ public class HelloController {
         //hides the filter screen and shows the results screen
         resultsView.setVisible(true);
         filterMenu.setVisible(false);
+        backToHomeButton.setVisible(true);
         try{
             //condition is the condition, if any, that will be used in the WHERE clause of the SQL statement
             String condition = "";
