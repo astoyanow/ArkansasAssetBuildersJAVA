@@ -386,7 +386,7 @@ public class DataBase {
     }
 
     public static ObservableList<DataObject> searchDemographicsAndReturnData(String condition) throws SQLException, ClassNotFoundException{
-        String selectStmt = "SELECT * FROM Demographic INNER JOIN ReturnData ON Demographic.TaxYear = ReturnData.TaxYear AND Demographic.Client_ID = ReturnData.Client_ID" + condition;
+        String selectStmt = "SELECT * FROM Demographic INNER JOIN ReturnData ON Demographic.Client_ID = ReturnData.Client_ID" + condition;
         System.out.println(selectStmt);
         try{
             ResultSet rsDemographics = DB.executeQuery(selectStmt);
@@ -425,7 +425,7 @@ public class DataBase {
     }
 
     public static ObservableList<DataObject> searchDemographicsAndReturnDataAndClients(String condition) throws SQLException, ClassNotFoundException{
-        String selectStmt = "SELECT * FROM Demographic INNER JOIN ReturnData ON Demographic.TaxYear = ReturnData.TaxYear AND Demographic.Client_ID = ReturnData.Client_ID INNER JOIN Client ON Demographic.Client_ID = Client.ID" + condition;
+        String selectStmt = "SELECT * FROM Demographic INNER JOIN ReturnData ON Demographic.Client_ID = ReturnData.Client_ID INNER JOIN Client ON Demographic.Client_ID = Client.ID" + condition;
         System.out.println(selectStmt);
         try{
             ResultSet rsDemographics = DB.executeQuery(selectStmt);

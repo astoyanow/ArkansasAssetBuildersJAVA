@@ -110,13 +110,23 @@ public class FileParser{
                 splitLine.replaceAll(String::trim);
                 capitalizeNames(splitLine);
                 if (this.columnNames.contains("DOB") || this.columnNames.contains("DATE OF BIRTH")) {
-                    reformatDOB(splitLine, splitLine.contains("DOB")
-                            ? getColumn("DOB")
-                            : getColumn("DATE OF BIRTH"));
+                    if (this.columnNames.contains("DOB")){
+                        if (!splitLine.get(getColumn("DOB")).equals("")){
+                            reformatDOB(splitLine, getColumn("DOB"));
+                        }
+                    }else{
+                        if (!splitLine.get(getColumn("DATE OF BIRTH")).equals("")){
+                            reformatDOB(splitLine, getColumn("DATE OF BIRTH"));
+                        }
+                    }
                 }
-                reformatSS(splitLine, this.columnNames.contains("L4SSN")
-                           ? getColumn("L4SSN")
-                           : getColumn("LAST 4"));
+                if (this.columnNames.contains("L4SSN")){
+                    reformatSS(splitLine, getColumn("L4SSN"));
+                }else if (this.columnNames.contains("LAST 4")){
+                    reformatSS(splitLine, getColumn("LAST 4"));
+                }else{
+                    reformatSS(splitLine, getColumn("LAST4SS"));
+                }
                 String clientKey = createKey(splitLine);
                 this.data.put(clientKey, new HashMap<>());
                 for (int column = 0; column < splitLine.size(); column++){
