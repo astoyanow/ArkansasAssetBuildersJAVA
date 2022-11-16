@@ -328,8 +328,8 @@ public class HelloController {
             if(cols[0] && conds[0]){
                 //the numCols variable is decremented each time a condition is added
                 numCols--;
-                String fn = name.getText().split("\\s+")[0];
-                String ln = name.getText().split("\\s+")[1];
+                String fn = name.getText().split("\\s+")[0].toUpperCase();
+                String ln = name.getText().split("\\s+")[1].toUpperCase();
                 //the values of the filter are added to the condition
                 condition += "FirstName = '" + fn + "' AND LastName = '" + ln + "'";
                 //if there is a filter to add to the condition after this one, AND needs to be added to the condition
