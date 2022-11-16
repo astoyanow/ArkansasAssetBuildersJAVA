@@ -12,10 +12,11 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.aab.arkansasassetbuilders.HelloController">
+<StackPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.aab.arkansasassetbuilders.HelloController">
    <children>
       <BorderPane fx:id="filterMenu" prefHeight="200.0" prefWidth="200.0" visible="false">
          <bottom>
@@ -114,10 +115,17 @@
       </BorderPane>
       <BorderPane fx:id="resultsView" prefHeight="200.0" prefWidth="200.0">
          <bottom>
-            <Button fx:id="openFilter" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#openFilterMenu" text="Filter" BorderPane.alignment="BOTTOM_RIGHT">
+            <HBox spacing="10.0" BorderPane.alignment="BOTTOM_RIGHT">
+               <children>
+                  <Pane prefHeight="0.0" prefWidth="535.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="openFilter" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#openFilterMenu" text="Filter" />
+                  <Button mnemonicParsing="false" onAction="#export" text="Export" />
+                  <Button fx:id="backToHomeButton" mnemonicParsing="false" onAction="#switchToUpload" text="Back to Home" />
+               </children>
                <BorderPane.margin>
                   <Insets bottom="20.0" right="50.0" />
-               </BorderPane.margin></Button>
+               </BorderPane.margin>
+            </HBox>
          </bottom>
          <center>
             <TableView fx:id="resultsTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -159,10 +167,5 @@
             </VBox>
          </center>
       </BorderPane>
-      <Button fx:id="backToHomeButton" mnemonicParsing="false" onAction="#switchToUpload" text="Back to Home" StackPane.alignment="BOTTOM_RIGHT">
-         <StackPane.margin>
-            <Insets bottom="20.0" right="110.0" />
-         </StackPane.margin>
-      </Button>
    </children>
 </StackPane>
