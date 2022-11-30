@@ -35,7 +35,17 @@ class FileParserTest {
     void getColumnNames() {
         List<String> columnNames = Arrays.asList("EFIN","Last 4","Preparer Name","Agency ID","Return Type","Residency",
                                                  "FilingStatus","First Name","Last Name","Ack Code","Refund",
-                                                 "Balance Due","State Withholding","State EIC","State Tax Liability");
+                                                 "Balance Due","State Withholding","State EIC","State Tax Liability",
+                                                 "CreatedDateTime", "Zip", "State", "ChildTaxCredit", "AddCTC", "EIC",
+                                                 "TotalIRSExemptions", "PaperState", "PaperFederal",
+                                                 "RequestingDirectDeposit", "FederalRejected", "StateAccepted",
+                                                 "StateRejected", "PrimaryOrSecondary60+", "AGI", "Created Date",
+                                                 "#SavingsBonds", "SavingsBonds", "EducationTaxCredit",
+                                                 "ElderlyCredit", "TotalRespPymnt", "TotalADVPTCRepayment",
+                                                 "AverageADVPTCPayment", "TotalPTC", "BalDueReturns", "ITIN",
+                                                 "Exemption 7", "FullYearCoverage", "Form8888", "ScheduleA", "ScheduleB",
+                                                 "ScheduleC", "ScheduleCEZ", "ScheduleD", "ScheduleE", "ScheduleF",
+                                                 "ScheduleH", "ScheduleR", "ScheduleSETP", "ScheduleSESP");
         columnNames.replaceAll(String::toUpperCase);
         assertEquals(columnNames, parserObject.getColumnNames());
     }

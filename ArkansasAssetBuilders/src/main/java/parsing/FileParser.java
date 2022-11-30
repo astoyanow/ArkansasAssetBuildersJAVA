@@ -32,7 +32,6 @@ public class FileParser{
         String firstNameUpper = this.columnNames.contains("FIRST NAME")
                 ? line.get(getColumn("FIRST NAME")).toUpperCase()
                 : "";
-        System.out.println(firstNameUpper);
         String lastNameUpper = line.get(getColumn("LAST NAME")).toUpperCase();
         if (!firstNameUpper.equals("")){
             line.set(getColumn("FIRST NAME"), firstNameUpper);
@@ -58,9 +57,7 @@ public class FileParser{
      * @param columnName Name of the column.
      * @return The index associated with the column.
      */
-    int getColumn(String columnName){
-        return this.columnNames.indexOf(columnName);
-    }
+    int getColumn(String columnName){return this.columnNames.indexOf(columnName);}
 
     /**
      * Gets all header names from the csv file.
@@ -69,7 +66,7 @@ public class FileParser{
     List<String> getColumnNames(){
         List<String> columnNames = Arrays.asList(this.fileLines.get(0).split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"));
         columnNames.replaceAll(String::trim);
-        columnNames.replaceAll(s -> s.replaceAll("[^\\w\\s]", ""));
+        columnNames.replaceAll(s -> s.replaceAll("^\"|\"$", ""));
         columnNames.replaceAll(String::toUpperCase);
         return columnNames;
     }
@@ -176,7 +173,7 @@ public class FileParser{
      */
     List<String> removeCommas(String line){
         List<String> newLine = Arrays.asList(line.strip().split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"));
-        newLine.replaceAll(s -> s.replaceAll("[\",]", ""));
+        newLine.replaceAll(s -> s.replaceAll("[\",$]", ""));
         for (int value = 0; value < newLine.size(); value ++){
             if (newLine.get(value).contains("Sum")){
                 newLine.set(value, newLine.get(value).substring(6));
