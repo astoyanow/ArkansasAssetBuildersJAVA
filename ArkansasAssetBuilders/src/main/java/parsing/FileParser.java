@@ -176,7 +176,7 @@ public class FileParser{
         newLine.replaceAll(s -> s.replaceAll("[\",$]", ""));
         for (int value = 0; value < newLine.size(); value ++){
             if (newLine.get(value).contains("Sum")){
-                newLine.set(value, newLine.get(value).substring(6));
+                newLine.set(value, newLine.get(value).substring(5));
             }
         }
         return newLine;

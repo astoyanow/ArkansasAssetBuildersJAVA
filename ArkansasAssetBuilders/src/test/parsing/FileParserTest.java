@@ -17,7 +17,7 @@ class FileParserTest {
 
     @Test
     void capitalizeNames() {
-        assertEquals("JOHN", parserObject.getClientProperty(parserObject.getClient("A1234"), "First Name"));
+        assertEquals("JOHN", parserObject.getClientProperty(parserObject.getClient("A1234"), "FIRST NAME"));
     }
 
     @Test
@@ -67,7 +67,7 @@ class FileParserTest {
 
     @Test
     void reformatSS() {
-        int ssColumn = parserObject.getColumn("Last 4");
+        int ssColumn = parserObject.getColumn("LAST 4");
         List<String> line1 = parserObject.removeCommas(parserObject.fileLines.get(2));
         parserObject.reformatSS(line1, ssColumn);
         List<String> line2 = parserObject.removeCommas(parserObject.fileLines.get(3));
