@@ -102,7 +102,6 @@ public class FileParser{
         for (int line = 0; line < this.fileLines.size() - 1; line++) {
             if (line > 0){
                 List<String> splitLine = removeCommas(this.fileLines.get(line));
-                splitLine.replaceAll(String::trim);
                 capitalizeNames(splitLine);
                 if (this.columnNames.contains("DOB") || this.columnNames.contains("DATE OF BIRTH")) {
                     if (this.columnNames.contains("DOB")){
@@ -179,6 +178,7 @@ public class FileParser{
                 newLine.set(value, newLine.get(value).substring(5));
             }
         }
+        newLine.replaceAll(String::trim);
         return newLine;
     }
 
