@@ -12,6 +12,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -48,22 +49,10 @@
                         <ChoiceBox fx:id="taxYear" disable="true" prefWidth="150.0" />
                      </children>
                   </HBox>
-                  <HBox layoutX="10.0" layoutY="288.0" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <CheckBox mnemonicParsing="false" onAction="#addressBoxAction" text="Address:" />
-                        <TextField fx:id="address" disable="true" />
-                     </children>
-                  </HBox>
                   <HBox layoutX="10.0" layoutY="306.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <CheckBox mnemonicParsing="false" onAction="#zipBoxAction" text="ZIP Code:" />
                         <TextField fx:id="zip" disable="true" />
-                     </children>
-                  </HBox>
-                  <HBox layoutX="10.0" layoutY="318.0" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <CheckBox mnemonicParsing="false" onAction="#countyBoxAction" text="County:" />
-                        <TextField fx:id="county" disable="true" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="327.0" prefHeight="100.0" prefWidth="200.0">
@@ -96,28 +85,23 @@
                         <TextField fx:id="ctc" disable="true" />
                      </children>
                   </HBox>
-                  <HBox layoutX="10.0" layoutY="349.0" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <CheckBox mnemonicParsing="false" onAction="#dependentsBoxAction" text="Dependents:" />
-                        <TextField fx:id="dependents" disable="true" />
-                     </children>
-                  </HBox>
-                  <HBox layoutX="10.0" layoutY="352.0" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <CheckBox mnemonicParsing="false" onAction="#surveyScoreBoxAction" text="Survey Score:" />
-                        <TextField fx:id="surveyScore" disable="true" />
-                     </children>
-                  </HBox>
                </children>
             </VBox>
          </center>
       </BorderPane>
       <BorderPane fx:id="resultsView" prefHeight="200.0" prefWidth="200.0">
          <bottom>
-            <Button fx:id="openFilter" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#openFilterMenu" text="Filter" BorderPane.alignment="BOTTOM_RIGHT">
+            <HBox spacing="10.0" BorderPane.alignment="BOTTOM_RIGHT">
+               <children>
+                  <Pane prefHeight="0.0" prefWidth="535.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="openFilter" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#openFilterMenu" text="Filter" />
+                  <Button mnemonicParsing="false" onAction="#export" text="Export" />
+                  <Button fx:id="backToHomeButton" mnemonicParsing="false" onAction="#switchToUpload" text="Back to Home" />
+               </children>
                <BorderPane.margin>
                   <Insets bottom="20.0" right="50.0" />
-               </BorderPane.margin></Button>
+               </BorderPane.margin>
+            </HBox>
          </bottom>
          <center>
             <TableView fx:id="resultsTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">

@@ -71,6 +71,7 @@ public class SceneController {
                     DataBase.insertClient(data.get(key), key);
                     DataBase.insertDemographic(data.get(key), key);
                     DataBase.insertReturnData(data.get(key), key);
+                    DataBase.insertQuestion(data.get(key), key);
                     DataBase.insertTaxYear(data.get(key));
                 }
             }
@@ -78,18 +79,4 @@ public class SceneController {
             System.err.println(e);
         }
     }
-    // dont need this unless you want it to open the file that you selected
-    /*
-    private void openFile(File file) { // this is witchcraft that I found on the internet
-        try {
-            desktop.open(file);
-        } catch (IOException ex) {
-            Logger.getLogger(
-                    SceneControler.class.getName()).log(
-                    Level.SEVERE, null, ex
-            );
-        }
-    }*/
-    
-
 }
