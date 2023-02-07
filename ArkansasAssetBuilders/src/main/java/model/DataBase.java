@@ -683,11 +683,11 @@ public class DataBase {
 
     public static void insertTaxYear(HashMap<String, String> clientData){
         String taxYear = "";
-        if (clientData.containsKey("CREATEDDATETIME")){
-            taxYear = clientData.get("CREATEDDATETIME").substring(0, 4);
+        if (clientData.containsKey("TAXYEAR")){
+            taxYear = clientData.get("TAXYEAR");
         }
         if (!taxYear.equals("")){
-            try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM TaxYear WHERE TaxYear = %s;", taxYear))) {
+            try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM TaxYear WHERE TAXYEAR = %s;", taxYear))) {
                 // If the demographic already exists, there is no need to do anything else.
                 if (query.next()){
                     // Reset pointer of the ResultSet (somewhat redundant since there should only be one or no elements
@@ -695,7 +695,7 @@ public class DataBase {
                     query.beforeFirst();
                 }else {
                     // Create an update SQL command to insert a new row into the Client table.
-                    String sqlStmt = "INSERT INTO TaxYear (TaxYear)\n" +
+                    String sqlStmt = "INSERT INTO TaxYear (TAXYEAR)\n" +
                                      "VALUES (" + taxYear + ");";
                     try {
                         // Execute the SQL statement.
@@ -735,15 +735,15 @@ public class DataBase {
             DataObject dataObject = new DataObject();
             if(demographic) {
                 dataObject.setId(rs.getString("Client_ID"));
-                dataObject.setTaxYear(rs.getInt("TaxYear"));
+                dataObject.setTaxYear(rs.getInt("TAXYEAR"));
                 dataObject.setZip(rs.getString("Zip"));
                 dataObject.setState(rs.getString("State"));
             }
             if(returnData){
-                dataObject.setFederal(rs.getBoolean("FederalReturn"));
-                dataObject.setRefund(rs.getInt("TotalRefund"));
-                dataObject.setEic(rs.getInt("EITC"));
-                dataObject.setChildTaxCredit(rs.getInt("CTC"));
+                dataObject.setFederal(rs.getBoolean("FEDERAL"));
+                dataObject.setRefund(rs.getInt("REFUND"));
+                dataObject.setEic(rs.getInt("EIC"));
+                dataObject.setChildTaxCredit(rs.getInt("CHILDTAXCREDIT"));
             }
             if(client){
                 dataObject.setFirstName(rs.getString("FirstName"));
@@ -754,7 +754,7 @@ public class DataBase {
             //This may not be a good way to set TaxYear
             //
             if(demographic || returnData || !client){
-                dataObject.setTaxYear(rs.getInt("TaxYear"));
+                dataObject.setTaxYear(rs.getInt("TAXYEAR"));
             }
             dataObjectList.add(dataObject);
         }
@@ -880,7 +880,7 @@ public class DataBase {
     }
 
     public static ObservableList<DataObject> searchDemographicsAndReturnDataAndClients(String condition) throws SQLException, ClassNotFoundException{
-        String selectStmt = "SELECT * FROM Demographic INNER JOIN ReturnData ON Demographic.TaxYear = ReturnData.TaxYear AND Demographic.Client_ID = ReturnData.Client_ID INNER JOIN Client ON Demographic.Client_ID = Client.ID" + condition;
+        String selectStmt = "SELECT * FROM Demographic INNER JOIN ReturnData ON Demographic.TAXYEAR = ReturnData.TAXYEAR AND Demographic.Client_ID = ReturnData.Client_ID INNER JOIN Client ON Demographic.Client_ID = Client.ID" + condition;
         System.out.println(selectStmt);
         try{
             ResultSet rsDemographics = DB.executeQuery(selectStmt);

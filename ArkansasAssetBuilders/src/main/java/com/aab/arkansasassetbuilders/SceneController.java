@@ -28,6 +28,8 @@ public class SceneController {
     public File file;
     @FXML
     private TextField fileName;
+    @FXML
+    private TextField taxYearField;
 
     public void switchToUpload(ActionEvent event) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("UploadScreen.fxml")));
@@ -52,14 +54,12 @@ public class SceneController {
     public void setFileChooser(ActionEvent event) throws IOException{ // this is witchcraft that I found on the internet
         final FileChooser fileChooser = new FileChooser();
         file = fileChooser.showOpenDialog(stage);
-        //if (file != null) {
-        //    openFile(file);
-        //}
         fileName.setText(String.valueOf(file)); //so you can see what file was uploaded on the screen
         // I want this file name to save and been seen on Search and Filter Screen too
         System.out.println(file);
 
     }
+
 
     @FXML
     private void saveFile() {
@@ -67,6 +67,12 @@ public class SceneController {
             if (file.exists()){
                 FileParser parser = new FileParser(file);
                 Map<String, HashMap<String, String>> data = parser.data;
+                if (!Objects.equals(taxYearField.getText(), "")){
+                    String taxYear = taxYearField.getText();
+                    for (String key: data.keySet()){
+                        data.get(key).put("TAXYEAR", taxYear);
+                    }
+                }
                 for (String key: data.keySet()){
                     DataBase.insertClient(data.get(key), key);
                     DataBase.insertDemographic(data.get(key), key);
