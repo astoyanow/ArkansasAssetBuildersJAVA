@@ -121,9 +121,6 @@ public class HelloController {
 
     @FXML
     private void initialize () throws SQLException, ClassNotFoundException {
-
-        DataBase.initializeDB();
-
         clientIDColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty());
         firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
         lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
@@ -136,7 +133,6 @@ public class HelloController {
             ty.add(Double.toString(d.getTaxYear()));
         }
         taxYear.setItems(ty);
-
     }
 
     public void switchToUpload(ActionEvent event) throws IOException {
