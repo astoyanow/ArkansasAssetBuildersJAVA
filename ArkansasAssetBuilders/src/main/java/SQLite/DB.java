@@ -96,6 +96,26 @@ public class DB {
         return crs;
     }
 
+    public static void executeCreateQuery(String query){
+        Statement stmt = null;
+
+        try {
+            connect();
+            //c.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            stmt = connection.createStatement();
+            System.out.println(query);
+            stmt.execute(query);
+            stmt.close();
+            disconnect();
+        } catch ( Exception e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            System.exit(0);
+        }
+        System.out.println("Operation done successfully");
+    }
+
     /**
      * Method for updating values in the database with a given SQL statement.
      * @param sqlStmt String, statement that is carried out to update the database.
@@ -115,7 +135,15 @@ public class DB {
         }
     }
 
-    public static void main(String args[]){
+    public static boolean dbExists() throws SQLException{
         connect();
+        DatabaseMetaData meta = connection.getMetaData();
+        ResultSet resultSet = meta.getTables(null,null,null,new String[]{"Table"});
+        return resultSet.next();
+    }
+
+    public static void main(String args[]) throws SQLException {
+        connect();
+        System.out.println(dbExists());
     }
 }

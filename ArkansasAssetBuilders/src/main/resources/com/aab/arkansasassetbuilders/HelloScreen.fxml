@@ -33,7 +33,7 @@
                   </HBox>
                   <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <CheckBox mnemonicParsing="false" onAction="#dobBoxAction" selected="true" text="Date of BIrth:" />
+                        <CheckBox mnemonicParsing="false" onAction="#dobBoxAction" selected="true" text="Date of Birth:" />
                         <DatePicker fx:id="dob" />
                      </children>
                   </HBox>
