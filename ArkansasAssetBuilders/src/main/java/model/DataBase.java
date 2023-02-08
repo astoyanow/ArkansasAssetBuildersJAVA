@@ -584,7 +584,7 @@ public class DataBase {
             "TOTALIRSEXEMPTIONS",
             "REFUND",
             "PAPERSTATE",
-            "PAPERFED",
+            "PAPERFEDERAL",
             "REQUESTINGDD",
             "AGI",
             "ADDCTC",
@@ -615,7 +615,7 @@ public class DataBase {
             "SCHEDULESESP",
             "AGENCYID",
             "STATEWITHOLDING",
-            "STATETAXYLIABILITY",
+            "STATETAXLIABILITY",
             "AAMOUNTTAXPAYERISPLANNINGTOSAVE"
     };
 

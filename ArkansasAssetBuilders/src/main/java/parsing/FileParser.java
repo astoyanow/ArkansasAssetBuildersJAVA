@@ -170,8 +170,12 @@ public class FileParser{
         List<String> newLine = Arrays.asList(line.strip().split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"));
         newLine.replaceAll(s -> s.replaceAll("[\",]", ""));
         for (int value = 0; value < newLine.size(); value ++){
-            if (newLine.get(value).contains("Sum")){
-                newLine.set(value, newLine.get(value).substring(6));
+            String lineValue = newLine.get(value);
+            if (lineValue.contains("Sum")){
+                newLine.set(value, lineValue.substring(6));
+            }
+            else if (lineValue.contains("$")){
+                newLine.set(value, lineValue.substring(1, lineValue.length() - 4));
             }
         }
         return newLine;
@@ -182,6 +186,6 @@ public class FileParser{
      * @param ss String containing last four digits of Social Security number.
      * @return Reformatted last four digits of Social Security number.
      */
-    String removeXChars(String ss){return ss.substring(ss.length()-4);}
+    String removeXChars(String ss){return ss.substring(ss.length() - 4);}
 
 }
