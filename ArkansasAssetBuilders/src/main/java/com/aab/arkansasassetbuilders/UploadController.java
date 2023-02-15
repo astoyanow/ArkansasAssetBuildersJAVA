@@ -1,11 +1,14 @@
 package com.aab.arkansasassetbuilders;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -15,12 +18,13 @@ import parsing.FileParser;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 
-public class SceneController {
+public class UploadController {
     private Desktop desktop = Desktop.getDesktop();
     private Stage stage;
     private Scene scene;
@@ -30,6 +34,18 @@ public class SceneController {
     private TextField fileName;
     @FXML
     private TextField taxYearField;
+
+    @FXML
+    private ComboBox<String> isFederal;
+
+    @FXML
+    private void initialize (){
+        ObservableList<String> listItems = FXCollections.observableArrayList();
+        listItems.add("Federal");
+        listItems.add("State");
+        listItems.add("Neither");
+        isFederal.setItems(listItems);
+    }
 
     public void switchToUpload(ActionEvent event) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("UploadScreen.fxml")));
@@ -67,10 +83,17 @@ public class SceneController {
             if (file.exists()){
                 FileParser parser = new FileParser(file);
                 Map<String, HashMap<String, String>> data = parser.data;
-                if (!Objects.equals(taxYearField.getText(), "")){
-                    String taxYear = taxYearField.getText();
-                    for (String key: data.keySet()){
+                for (String key: data.keySet()){
+                    if (!Objects.equals(taxYearField.getText(), "")){
+                        String taxYear = taxYearField.getText();
                         data.get(key).put("TAXYEAR", taxYear);
+                    }
+                    if (isFederal.getValue().equals("Federal")){
+                        data.get(key).put("FEDERAL", "1");
+                    } else if (isFederal.getValue().equals("State")){
+                        data.get(key).put("FEDERAL", "0");
+                    } else {
+                        data.get(key).put("FEDERAL", "2");
                     }
                 }
                 for (String key: data.keySet()){

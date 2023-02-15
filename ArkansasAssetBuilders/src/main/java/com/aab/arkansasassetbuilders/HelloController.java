@@ -331,7 +331,7 @@ public class HelloController {
                 }else if(clientFilter){
                     condition += "Demographic.";
                 }
-                condition += "TaxYear = " + taxYear.getValue().toString();
+                condition += "TAXYEAR = " + taxYear.getValue().toString();
                 if(numCols > 0){condition += " AND ";}
             }
             if(cols[4] && conds[4]){
@@ -346,22 +346,22 @@ public class HelloController {
             }
             if(cols[6] && conds[6]){
                 numCols--;
-                condition += "FederalReturn = " + federalReturn.getText();
+                condition += "FEDERAL = " + federalReturn.getText();
                 if(numCols > 0){condition += " AND ";}
             }
             if(cols[7] && conds[7]){
                 numCols--;
-                condition += "TotalRefund = " + totalRefund.getText();
+                condition += "REFUND = " + totalRefund.getText();
                 if(numCols > 0){condition += " AND ";}
             }
             if(cols[8] && conds[8]){
                 numCols--;
-                condition += "EITC = " + eitc.getText();
+                condition += "EIC = " + eitc.getText();
                 if(numCols > 0){condition += " AND ";}
             }
             if(cols[9] && conds[9]){
                 numCols--;
-                condition += "CTC = " + ctc.getText();
+                condition += "CHILDTAXCREDIT = " + ctc.getText();
                 if(numCols > 0){condition += " AND ";}
             }
             System.out.println(condition);
