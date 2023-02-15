@@ -1,5 +1,7 @@
 package com.aab.arkansasassetbuilders;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,11 +12,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.DataBase;
+import model.DataObject;
 import parsing.FileParser;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -28,6 +32,11 @@ public class SceneController {
     public File file;
     @FXML
     private TextField fileName;
+
+    @FXML
+    private void initialize () throws SQLException{
+        DataBase.initializeDB();
+    }
 
     public void switchToUpload(ActionEvent event) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("UploadScreen.fxml")));
