@@ -40,16 +40,12 @@ public class UploadController {
     private ComboBox<String> isFederal;
 
     @FXML
-    private void initialize (){
+    private void initialize () throws SQLException{
         ObservableList<String> listItems = FXCollections.observableArrayList();
         listItems.add("Federal");
         listItems.add("State");
         listItems.add("Neither");
         isFederal.setItems(listItems);
-    }
-
-    @FXML
-    private void initialize () throws SQLException{
         DataBase.initializeDB();
     }
 
