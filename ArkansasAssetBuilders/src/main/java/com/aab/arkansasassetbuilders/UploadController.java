@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.DataBase;
+import model.DataObject;
 import parsing.FileParser;
 
 import java.awt.*;
@@ -45,6 +46,11 @@ public class UploadController {
         listItems.add("State");
         listItems.add("Neither");
         isFederal.setItems(listItems);
+    }
+
+    @FXML
+    private void initialize () throws SQLException{
+        DataBase.initializeDB();
     }
 
     public void switchToUpload(ActionEvent event) throws IOException {
