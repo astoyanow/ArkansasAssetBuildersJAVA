@@ -98,7 +98,7 @@ public class HelloController {
     private TableColumn<DataObject, String> last4ssColumn;
 
     @FXML
-    private TableColumn<DataObject, Double> taxYearColumn;
+    private TableColumn<DataObject, Integer> taxYearColumn;
 
     @FXML
     private TableColumn<DataObject, String> zipColumn;
@@ -130,7 +130,7 @@ public class HelloController {
         ObservableList<String> ty = FXCollections.observableArrayList();
         ObservableList<DataObject> taxYears = DataBase.searchTaxYears("");
         for(DataObject d : taxYears){
-            ty.add(Double.toString(d.getTaxYear()));
+            ty.add(Integer.toString(d.getTaxYear()));
         }
         taxYear.setItems(ty);
     }
