@@ -8,12 +8,33 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class DataBase {
 
+    // Regex code from: https://codeahoy.com/q/11/check-if-a-string-is-numeric-in-java
+    private static final Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+
+    /**
+     * Check if a String is a number.
+     * Utility function for checking a String to insert as an integer into the
+     * SQLite database.
+     * @param str Input string
+     * @return boolean determining if the input string is an integer.
+     */
+    public static boolean isNumeric(String str) {
+        if (str == null) {
+            return false;
+        }
+
+        return pattern.matcher(str).matches();
+    }
+
     /*
+     * ==================================================================================
      * CLIENT FUNCTIONS
+     * ==================================================================================
      */
 
     /**
@@ -26,11 +47,16 @@ public class DataBase {
      */
     public static void insertClient(HashMap<String, String> clientData, String clientID) {
         // Grab client data for new or existing client in the table.
-        String firstName = clientData.get("FIRST NAME");
-        String lastName = clientData.get("LAST NAME");
+        String EFIN = clientData.get("EFIN");
+        String SIDN = "";
+        String firstName = clientData.get("FIRSTNAME");
+        String lastName = clientData.get("LASTNAME");
         int last4SS;
-        if (clientData.containsKey("LAST 4")){
-            last4SS = Integer.parseInt(clientData.get("LAST 4"));
+        if (clientData.containsKey("SIDN")){
+            SIDN = clientData.get("SIDN");
+        }
+        if (clientData.containsKey("LAST4")){
+            last4SS = Integer.parseInt(clientData.get("LAST4"));
         }else if (clientData.containsKey("LAST4SS")){
             last4SS = Integer.parseInt(clientData.get("LAST4SS"));
         } else{
@@ -38,10 +64,10 @@ public class DataBase {
         }
         // Not all CSVs contain the DoB of a client.
         String dob = "";
-        if (clientData.containsKey("DOB") || clientData.containsKey("DATE OF BIRTH")) {
+        if (clientData.containsKey("DOB") || clientData.containsKey("DATEOFBIRTH")) {
             dob = clientData.containsKey("DOB")
                     ? clientData.get("DOB")
-                    : clientData.get("DATE OF BIRTH");
+                    : clientData.get("DATEOFBIRTH");
         }
         // Get the row where the clientID exists in the Client table (if it does exist).
         try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM Client WHERE ID = '%s';", clientID))) {
@@ -52,14 +78,27 @@ public class DataBase {
                 query.beforeFirst();
 
                 // Update the fields.
-                updateFirstName(clientID, firstName);
-                updateLastName(clientID, lastName);
+                if (firstName != null){
+                    updateFirstName(clientID, firstName);
+                }
+                if (lastName != null){
+                    updateLastName(clientID, lastName);
+                }
+                if (dob != null){
+                    updateDOB(clientID, dob);
+                }
+                if (EFIN != null){
+                    updateEFIN(clientID, EFIN);
+                }
+                if (SIDN != null){
+                    updateSIDN(clientID, SIDN);
+                }
                 updateLast4SS(clientID, String.valueOf(last4SS));
-                updateDOB(clientID, dob);
             }else {
                 // Create an update SQL command to insert a new row into the Client table.
-                String sqlStmt = String.format("INSERT INTO Client (ID, FirstName, LastName, DoB, Last4SS) \n" +
-                        "VALUES ('%1$s', '%2$s', '%3$s', '%4$s', %5$d);", clientID, firstName, lastName, dob, last4SS);
+                String sqlStmt = String.format("INSERT INTO Client (ID, FirstName, LastName, DoB, Last4SS, EFIN, SIDN)"
+                                + "\n" + "VALUES ('%1$s', '%2$s', '%3$s', '%4$s', %5$d, '%6$s', '%7$s');", clientID,
+                                firstName, lastName, dob, last4SS, EFIN, SIDN);
                 try {
                     // Execute the SQL statement.
                     DB.update(sqlStmt);
@@ -70,7 +109,6 @@ public class DataBase {
             }
         }catch (Exception e){
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
         }
     }
 
@@ -151,10 +189,63 @@ public class DataBase {
         }
     }
 
+    /**
+     * Update EFIN of a Client.
+     * @param clientID String, the ID of the Client.
+     * @param efin String, EFIN that the last EFIN will be changed to.
+     * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
+     */
+    private static void updateEFIN(String clientID, String efin) throws SQLException{
+        String updateStmt =
+                "UPDATE Client\n" +
+                        "SET EFIN = '" + efin + "'\n" +
+                        "WHERE ID = '" + clientID + "';";
+        try{
+            DB.update(updateStmt);
+        }catch(Exception e){
+            System.out.print("Error occurred while UPDATE Operation: " + e);
+            throw e;
+        }
+    }
+
+    /**
+     * Update last name of a Client.
+     * @param clientID String, the ID of the Client.
+     * @param sidn String, SIDN that the SIDN will be changed to.
+     * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
+     */
+    private static void updateSIDN(String clientID, String sidn) throws SQLException{
+        String updateStmt =
+                "UPDATE Client\n" +
+                        "SET SIDN = '" + sidn + "'\n" +
+                        "WHERE ID = '" + clientID + "';";
+        try{
+            DB.update(updateStmt);
+        }catch(Exception e){
+            System.out.print("Error occurred while UPDATE Operation: " + e);
+            throw e;
+        }
+    }
+
+
 
     /*
-    DEMOGRAPHIC FUNCTIONS
+     * ==================================================================================
+     * DEMOGRAPHIC FUNCTIONS
+     * ==================================================================================
      */
+
+    static String[] demoFields = new String[] {
+            "TAXYEAR",
+            "CITY",
+            "STATE",
+            "ZIP",
+            "RESIDENCY",
+            "PRIMARYORSECONDARY60"
+    };
+
+    static HashMap<String, String> demoFieldMap = new HashMap<>();
+
     /**
      * Insert a demographic into the Demographic table of the database.
      * Inserts a demographic if the demographic associated with the clientID
@@ -166,184 +257,268 @@ public class DataBase {
     public static void insertDemographic(HashMap<String, String> clientData, String clientID){
         // Grab demographic data for new or existing demographic in the demographic table.
         // Not guaranteed that each field is in clientData, so must instantiate variables.
-        String taxYear = "";
-        String address = "";
-        String zip = "";
-        String county = "";
-        String state = "";
-        if (clientData.containsKey("CREATEDDATETIME")){
-            // Only want the year created.
-            taxYear = clientData.get("CREATEDDATETIME").substring(0,4);
+        for (String field: clientData.keySet()){
+            if (Arrays.asList(demoFields).contains(field)){
+                demoFieldMap.put(field, clientData.get(field));
+            }
         }
-        if (clientData.containsKey("ADDRESS")){
-            address = clientData.get("ADDRESS");
-        }
-        if (clientData.containsKey("ZIP")){
-            zip = clientData.get("ZIP");
-        }
-        if (clientData.containsKey("COUNTY")){
-            county = clientData.get("COUNTY");
-        }
-        if (clientData.containsKey("STATE")){
-            state = clientData.get("STATE");
-        }
-        try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM Demographic WHERE Client_ID = '%s';", clientID))) {
-            // If the demographic already exists, update the necessary fields.
-            if (query.next()){
-                // Reset pointer of the ResultSet (somewhat redundant since there should only be one or no elements
-                // but a good habit nonetheless).
-                query.beforeFirst();
-
-                // Update the fields. Since field in table could have existing data, do not want to
-                // overwrite with a null value.
-                if (!taxYear.equals("")){
-                    updateDemoTaxYear(clientID, taxYear);
-                }
-                if (!address.equals("")){
-                    updateAddress(clientID, address);
-                }
-                if (!zip.equals("")){
-                    updateZip(clientID, zip);
-                }
-                if (!county.equals("")){
-                    updateCounty(clientID, county);
-                }
-                if (!state.equals("")){
-                    updateState(clientID, state);
-                }
-            }else {
-                // Create an update SQL command to insert a new row into the Client table.
-                List<String> fields = Arrays.asList("TaxYear", "Address", "Zip", "County", "State");
-                List<String> values = Arrays.asList(taxYear, address, zip, county, state);
-                StringBuilder insertStmt = new StringBuilder("INSERT INTO Demographic (Client_ID");
-                StringBuilder intoStmt = new StringBuilder("VALUES ('" + clientID + "'");
-                for (int index = 0; index < fields.size(); index++){
-                    if (!values.get(index).equals("")){
-                        insertStmt.append(", ").append(fields.get(index));
-                        if (fields.get(index).equals("TaxYear") || fields.get(index).equals("Zip")){
-                            intoStmt.append(", ").append(values.get(index));
-                        }else{
-                            intoStmt.append(", ").append("'").append(values.get(index)).append("'");
-                        }
+        System.out.println(demoFieldMap);
+        StringBuilder insertStmt = new StringBuilder("INSERT INTO Demographic (Client_ID");
+        StringBuilder intoStmt = new StringBuilder("VALUES ('" + clientID + "'");
+        if(!demoFieldMap.isEmpty()){
+            for (String field: demoFieldMap.keySet()){
+                if (!demoFieldMap.get(field).equals("")){
+                    insertStmt.append(", ").append(field);
+                    if (isNumeric(demoFieldMap.get(field))){
+                        intoStmt.append(", ").append(demoFieldMap.get(field));
+                    }else{
+                        intoStmt.append(", ").append("'").append(demoFieldMap.get(field)).append("'");
                     }
                 }
-                insertStmt.append(") \n");
-                intoStmt.append((");"));
-                System.out.println(insertStmt + intoStmt.toString());
-                try {
-                    // Execute the SQL statement.
-                    DB.update(insertStmt + intoStmt.toString());
-                } catch (Exception e) {
-                    System.out.print("Error occurred while UPDATE Operation: " + e);
-                    throw e;
-                }
             }
-        }catch (Exception e){
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
+            insertStmt.append(") \n");
+            intoStmt.append((");"));
+            try {
+                // Execute the SQL statement.
+                DB.update(insertStmt + intoStmt.toString());
+            } catch (Exception e) {
+                System.out.print("Error occurred while UPDATE Operation: " + e);
+                throw e;
+            }
         }
     }
 
-    /**
-     * Update Address of a Demographic.
-     * @param demographicID String, the ID of the Demographic.
-     * @param address String, address that the old address will be changed to.
-     * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
-     */
-    public static void updateAddress(String demographicID, String address) throws SQLException{
-        String updateStmt =
-                "UPDATE Demographic\n" +
-                        "SET Address = '" + address + "'\n" +
-                        "WHERE Client_ID = '" + demographicID + "';";
-        try{
-            DB.update(updateStmt);
-        }catch(Exception e){
-            System.out.print("Error occurred while UPDATE Operation: " + e);
-            throw e;
-        }
-    }
-
-    /**
-     * Update Zip code of a Demographic.
-     * @param demographicID String, the ID of the Demographic.
-     * @param zip String, zip that the old zip will be changed to.
-     * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
-     */
-    public static void updateZip(String demographicID, String zip) throws SQLException{
-        String updateStmt =
-                "UPDATE Demographic\n" +
-                        "SET Zip = " + zip + "\n" +
-                        "WHERE Client_ID = '" + demographicID + "';";
-        try{
-            DB.update(updateStmt);
-        }catch(Exception e){
-            System.out.print("Error occurred while UPDATE Operation: " + e);
-            throw e;
-        }
-    }
-
-    /**
-     * Update County of a Demographic.
-     * @param demographicID String, the ID of the Demographic.
-     * @param county String, county that the old county will be changed to.
-     * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
-     */
-    public static void updateCounty(String demographicID, String county) throws SQLException{
-        String updateStmt =
-                "UPDATE Demographic\n" +
-                        "SET County = '" + county + "'\n" +
-                        "WHERE Client_ID = '" + demographicID + "';";
-        try{
-            DB.update(updateStmt);
-        }catch(Exception e){
-            System.out.print("Error occurred while UPDATE Operation: " + e);
-            throw e;
-        }
-    }
 
     /**
      * Update State of a Demographic.
      * @param demographicID String, the ID of the Demographic.
-     * @param state String, state that the old state will be changed to.
+     * @param ps60p String, number representing sum of 60+ year olds between the primary
+     *              and secondary filers.
      * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
      */
-    public static void updateState(String demographicID, String state) throws SQLException{
+    public static void updatePrimarySecondary60Plus(String demographicID, String ps60p) throws SQLException{
         String updateStmt =
                 "UPDATE Demographic\n" +
-                        "SET State = '" + state + "'\n" +
+                        "SET PrimarySecondary60Plus = '" + ps60p + "'\n" +
                         "WHERE Client_ID = '" + demographicID + "';";
         try{
             DB.update(updateStmt);
         }catch(Exception e){
             System.out.print("Error occurred while UPDATE Operation: " + e);
-            throw e;
         }
     }
-
-    /**
-     * Update Tax Year of a Demographic.
-     * @param demographicID String, the ID of the Demographic.
-     * @param taxYear String, year that the old tax year will be changed to.
-     * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
-     */
-    public static void updateDemoTaxYear(String demographicID, String taxYear) throws SQLException{
-        String updateStmt =
-                "UPDATE Demographic\n" +
-                        "SET TaxYear = " + taxYear + "\n" +
-                        "WHERE Client_ID = '" + demographicID + "';";
-        try{
-            DB.update(updateStmt);
-        }catch(Exception e){
-            System.out.print("Error occurred while UPDATE Operation: " + e);
-            throw e;
-        }
-    }
-
 
 
     /*
-    RETURN DATA FUNCTIONS
+     * ==================================================================================
+     * QUESTION FUNCTIONS
+     * ==================================================================================
      */
+
+    static String[] questionFields = new String[] {
+            "CONSENTTODISCLOSETAXRETURN",
+            "CONSENTTODISCLOSETAXPAYERD",
+            "CONSENTTOUSETAXPAYERDATA",
+            "CONSENTTODISCLOSETAXRETURN1",
+            "CONSENTTODISCLOSETAXRETURN2",
+            "CONSENTTODISCLOSETAXRETURN3",
+            "CONSENTTODISCLOSETAXRETURN4",
+            "QUESTIONS1",
+            "QUESTIONS2",
+            "QUESTIONS3",
+            "QUESTIONS4",
+            "QUESTIONS5",
+            "QUESTIONS6",
+            "QUESTIONS7",
+            "QUESTIONS8",
+            "QUESTIONS9",
+            "QUESTIONA",
+            "QUESTIONB",
+            "QUESTIONC",
+            "QUESTIOND",
+            "QUESTIONE",
+            "QUESTIONF",
+            "QUESTIONG",
+            "QUESTIONH",
+            "QUESTIONI",
+            "QUESTIONJ",
+            "QUESTIONK",
+            "PERSONS5ANDUNDER",
+            "PERSONSAGE6TO18",
+            "PERSONSAGE65PLUS"
+    };
+
+    static String[] actualQuestions = new String[] {
+            "1WOULDYOUSAYYOUCANCARRY",
+            "2WOULDYOUSAYYOUCANREAD",
+            "3DOYOUORANYMEMBEROFYOU",
+            "4AREYOUORYOURSPOUSEAVE",
+            "5YOURRACE",
+            "6YOURSPOUSESRACE",
+            "7YOURETHNICITY",
+            "8YOURSPOUSESETHNICITY",
+            "9WASTHETAXPAYERPHYSICALLY",
+            "AAREYOUPLANNINGTOSAVEAN",
+            "BIFYOUSETASIDEMONEYFROM",
+            "CWHICHOFTHEFOLLOWINGBEST",
+            "DINTHEPAST12MONTHSHAVE",
+            "EINATYPICALMONTHWHICHO",
+            "FSUPPOSETHATYOUHAVEANEM",
+            "GBECAUSEOFMYMONEYSITUATI",
+            "HIAMJUSTGETTINGBYFINANC",
+            "IIAMCONCERNEDTHATTHEMON",
+            "JIHAVEMONEYLEFTOVERATT",
+            "KMYFINANCESCONTROLMYLIFE",
+            "PERSONSONTAXRETURNAGE5AN",
+            "PERSONSONTAXRETURNAGE618",
+            "PERSONSONTAXRETURNAGE65"
+    };
+
+    static HashMap<String, String> questionFieldMap = new HashMap<>();
+
+    private static String formatQuestions(String unformattedString){
+        if (Character.isDigit(unformattedString.charAt(0))){
+            return "QUESTIONS" + unformattedString.charAt(0);
+        } else {
+            return switch (unformattedString) {
+                case "AAREYOUPLANNINGTOSAVEAN" -> "QUESTIONA";
+                case "BIFYOUSETASIDEMONEYFROM" -> "QUESTIONB";
+                case "CWHICHOFTHEFOLLOWINGBEST" -> "QUESTIONC";
+                case "DINTHEPAST12MONTHSHAVE" -> "QUESTIOND";
+                case "EINATYPICALMONTHWHICHO" -> "QUESTIONE";
+                case "FSUPPOSETHATYOUHAVEANEM" -> "QUESTIONF";
+                case "GBECAUSEOFMYMONEYSITUATI" -> "QUESTIONG";
+                case "HIAMJUSTGETTINGBYFINANC" -> "QUESTIONH";
+                case "IIAMCONCERNEDTHATTHEMON" -> "QUESTIONI";
+                case "JIHAVEMONEYLEFTOVERATT" -> "QUESTIONJ";
+                case "KMYFINANCESCONTROLMYLIFE" -> "QUESTIONK";
+                case "PERSONSONTAXRETURNAGE5AN" -> "PERSONS5ANDUNDER";
+                case "PERSONSONTAXRETURNAGE618" -> "PERSONSAGE6TO18";
+                case "PERSONSONTAXRETURNAGE65" -> "PERSONSAGE65PLUS";
+                default -> null;
+            };
+        }
+    }
+
+    public static void insertQuestion(HashMap<String, String> clientData, String clientID){
+        //For each key in the field map
+        //If the key matches one of the fields that we have instantiated, put it into our field map.
+        //However, if the field is one of the poorly formatted questions, reformat the question name
+        //to match the new name that we created ("7YOURETHNICITY" --> "QUESTIONS7") and insert the
+        //value of the question into the database.
+        //If the field is a consent to disclose tax return, since there are multiple of the same names,
+        //need to assign it to the four different fields reserved for it.
+
+        for (String field: clientData.keySet()){
+            if (Arrays.asList(questionFields).contains(field)){
+                questionFieldMap.put(field, clientData.get(field));
+            }
+            //Finding exact match of String occurrence in an Array:
+            //https://stackoverflow.com/questions/68115849/find-exact-match-from-array
+            else if (Arrays.stream(actualQuestions)
+                    .anyMatch(word -> Pattern
+                            .compile("(?<![a-z-])" + Pattern.quote(word) + "(?![a-z-])",
+                                     Pattern.CASE_INSENSITIVE)
+                            .matcher(field)
+                            .find())){
+                questionFieldMap.put(formatQuestions(field), clientData.get(field).replace("'", "`"));
+            } else if (field.contains("CONSENTTODISCLOSETAXRETURN")){
+                if (questionFieldMap.get("CONSENTTODISCLOSETAXRETURN").equals("")){
+                    questionFieldMap.put("CONSENTTODISCLOSETAXRETURN", clientData.get(field));
+                }
+                else if (questionFieldMap.get("CONSENTTODISCLOSETAXRETURN1").equals("")){
+                    questionFieldMap.put("CONSENTTODISCLOSETAXRETURN1", clientData.get(field));
+                }
+                else if (questionFieldMap.get("CONSENTTODISCLOSETAXRETURN2").equals("")){
+                    questionFieldMap.put("CONSENTTODISCLOSETAXRETURN2", clientData.get(field));
+                }
+                else if (questionFieldMap.get("CONSENTTODISCLOSETAXRETURN3").equals("")){
+                    questionFieldMap.put("CONSENTTODISCLOSETAXRETURN3", clientData.get(field));
+                }
+                else {
+                    questionFieldMap.put("CONSENTTODISCLOSETAXRETURN4", clientData.get(field));
+                }
+            }
+        }
+        StringBuilder insertStmt = new StringBuilder("INSERT INTO Question (Client_ID");
+        StringBuilder intoStmt = new StringBuilder("VALUES ('" + clientID + "'");
+        if(!questionFieldMap.isEmpty()){
+            for (String field: questionFieldMap.keySet()){
+                if (!questionFieldMap.get(field).equals("")){
+                    insertStmt.append(", ").append(field);
+                    if (isNumeric(questionFieldMap.get(field))){
+                        intoStmt.append(", ").append(questionFieldMap.get(field));
+                    }else{
+                        intoStmt.append(", ").append("'").append(questionFieldMap.get(field)).append("'");
+                    }
+                }
+            }
+            insertStmt.append(") \n");
+            intoStmt.append((");"));
+            System.out.println(insertStmt + intoStmt.toString());
+            try {
+                // Execute the SQL statement.
+                DB.update(insertStmt + intoStmt.toString());
+            } catch (Exception e) {
+                System.out.print("Error occurred while UPDATE Operation: " + e);
+            }
+        }
+    }
+
+
+    /*
+     * ==================================================================================
+     * RETURN DATA FUNCTIONS
+     * ==================================================================================
+     */
+
+    static String[] returnDataFields = new String[] {
+            "CREATEDDATETIME",
+            "TAXYEAR",
+            "FEDERAL",
+            "EIC",
+            "ACCEPTEDDATA",
+            "RETURNTYPE",
+            "FILINGSTATUS",
+            "TOTALIRSEXEMPTIONS",
+            "REFUND",
+            "PAPERSTATE",
+            "PAPERFEDERAL",
+            "REQUESTINGDD",
+            "AGI",
+            "ADDCTC",
+            "SAVINGSBONDS", // #SAVINGSBONDS
+            "SAVINGBOND",
+            "CHILDAXCREDIT",
+            "EDUCATIONTAXCREDIT",
+            "ELDERLYCREDIT",
+            "TOTALRESPPYMENT",
+            "TOTALADVPTCREPAYMENT",
+            "AVERAGEADVPTCPAYMENT",
+            "TOTALPTC",
+            "BALANCEDUE",
+            "ITIN",
+            "EXEMPTION7",
+            "FULLYEARCOVERAGE",
+            "FORM8888",
+            "SCHEDULEA",
+            "SCHEDULEB",
+            "SCHEDULEC",
+            "SCHEDULECEZ",
+            "SCHEDULED",
+            "SCHEDULEE",
+            "SCHEDULEF",
+            "SCHEDULEH",
+            "SCHEDULER",
+            "SCHEDULESETP",
+            "SCHEDULESESP",
+            "AGENCYID",
+            "STATEWITHOLDING",
+            "STATETAXLIABILITY",
+            "AAMOUNTTAXPAYERISPLANNINGTOSAVE"
+    };
+
+    static HashMap<String, String> returnFieldMap = new HashMap<>();
 
     /**
      * Insert a return into the Return table of the database.
@@ -354,267 +529,93 @@ public class DataBase {
      * @param clientID ID of the return's client.
      */
     public static void insertReturnData(HashMap<String, String> clientData, String clientID){
-        // Grab demographic data for new or existing demographic in the demographic table.
-        // Not guaranteed that each field is in clientData, so must instantiate variables.
-        String taxYear = "";
-        String federalReturn = "";
-        String totalRefund = "";
-        String EITC = "";
-        String CTC = "";
-        String dependents = "";
-        String surveyScore = "";
-        if (clientData.containsKey("CREATEDDATETIME")){
-            // Only want the year created.
-            taxYear = clientData.get("CREATEDDATETIME").substring(0,4);
+        for (String field: clientData.keySet()){
+            if (Arrays.asList(returnDataFields).contains(field)){
+                returnFieldMap.put(field, clientData.get(field));
+            }
         }
-        if (clientData.containsKey("RETURN")){
-            federalReturn = clientData.get("RETURN");
-        }
-        if (clientData.containsKey("TOTALREFUND")){
-            totalRefund = clientData.get("TOTALREFUND");
-        }
-        if (clientData.containsKey("EITC")){
-            EITC = clientData.get("EITC");
-        }
-        if (clientData.containsKey("CTC")){
-            CTC = clientData.get("CTC");
-        }
-        if (clientData.containsKey("DEPENDENTS")){
-            dependents = clientData.get("DEPENDENTS");
-        }
-        if (clientData.containsKey("SURVEYSCORE")){
-            surveyScore = clientData.get("SURVEYSCORE");
-        }
-        try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM ReturnData WHERE Client_ID = '%s';", clientID))) {
-            // If the demographic already exists, update the necessary fields.
-            if (query.next()){
+        try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM ReturnData WHERE Client_ID = '%1$s'" +
+                                                             "AND TAXYEAR = '%2$s' AND FEDERAL = '%3$s';",
+                                                      clientID,
+                                                      clientData.get("TAXYEAR"),
+                                                      clientData.get("FEDERAL")))) {
+            // If the client already exists, update the necessary fields.
+            if (query.next()) {
                 // Reset pointer of the ResultSet (somewhat redundant since there should only be one or no elements
                 // but a good habit nonetheless).
                 query.beforeFirst();
-
-                // Update the fields. Since field in table could have existing data, do not want to
-                // overwrite with a null value.
-                if (!taxYear.equals("")){
-                    updateReturnTaxYear(clientID, taxYear);
-                }
-                if (!federalReturn.equals("")){
-                    updateFederalReturn(clientID, federalReturn);
-                }
-                if (!totalRefund.equals("")){
-                    updateTotalRefund(clientID, federalReturn);
-                }
-                if (!EITC.equals("")){
-                    updateEITC(clientID, EITC);
-                }
-                if (!CTC.equals("")){
-                    updateCTC(clientID, CTC);
-                }
-                if (!dependents.equals("")){
-                    updateDependents(clientID, dependents);
-                }
-                if (!surveyScore.equals("")){
-                    updateSurveyScore(clientID, surveyScore);
-                }
-            }else {
-                // Create an update SQL command to insert a new row into the Client table.
-                List<String> fields = Arrays.asList("TaxYear", "FederalReturn", "TotalRefund",
-                        "EITC", "CTC", "Dependents", "SurveyScore");
-                List<String> values = Arrays.asList(taxYear, federalReturn, totalRefund,
-                        EITC, CTC, dependents, surveyScore);
+            }else{
                 StringBuilder insertStmt = new StringBuilder("INSERT INTO ReturnData (Client_ID");
                 StringBuilder intoStmt = new StringBuilder("VALUES ('" + clientID + "'");
-                for (int index = 0; index < fields.size(); index++){
-                    if (!values.get(index).equals("")){
-                        insertStmt.append(", ").append(fields.get(index));
-                        intoStmt.append(", ").append(values.get(index));
+                if (!returnFieldMap.isEmpty()) {
+                    for (String field : returnFieldMap.keySet()) {
+                        if (!returnFieldMap.get(field).equals("")) {
+                            insertStmt.append(", ").append(field);
+                            if (isNumeric(returnFieldMap.get(field))) {
+                                intoStmt.append(", ").append(returnFieldMap.get(field));
+                            } else {
+                                intoStmt.append(", ").append("'").append(returnFieldMap.get(field)).append("'");
+                            }
+                        }
+                    }
+                    insertStmt.append(") \n");
+                    intoStmt.append((");"));
+                    try {
+                        // Execute the SQL statement.
+                        DB.update(insertStmt + intoStmt.toString());
+                    } catch (Exception e) {
+                        System.out.print("Error occurred while UPDATE Operation: " + e);
                     }
                 }
-                insertStmt.append(") \n");
-                intoStmt.append((");"));
-                System.out.println(insertStmt + intoStmt.toString());
-                try {
-                    // Execute the SQL statement.
-                    DB.update(insertStmt + intoStmt.toString());
-                } catch (Exception e) {
-                    System.out.print("Error occurred while UPDATE Operation: " + e);
-                    throw e;
-                }
             }
-        }catch (Exception e){
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
-        }
-    }
-
-    /**
-     * Update Tax Year of a ReturnData object.
-     * @param returnDataID String, the ID of the ReturnData object.
-     * @param taxYear String, tax year that the old tax year will be changed to.
-     * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
-     */
-    public static void updateReturnTaxYear(String returnDataID, String taxYear) throws SQLException{
-        String updateStmt =
-                "UPDATE ReturnData\n" +
-                        "SET TaxYear = " + taxYear + "\n" +
-                        "WHERE Client_ID = '" + returnDataID + "';";
-        try{
-            DB.update(updateStmt);
-        }catch(Exception e){
-            System.out.print("Error occurred while UPDATE Operation: " + e);
-            throw e;
-        }
-    }
-
-    /**
-     * Update Federal Return of a ReturnData object.
-     * @param returnDataID String, the ID of the ReturnData object.
-     * @param federalReturn String, federal return that the old federal return will be changed to.
-     * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
-     */
-    public static void updateFederalReturn(String returnDataID, String federalReturn) throws SQLException{
-        String updateStmt =
-                "UPDATE ReturnData\n" +
-                        "SET FederalReturn = " + federalReturn + "\n" +
-                        "WHERE Client_ID = '" + returnDataID + "';";
-        try{
-            DB.update(updateStmt);
-        }catch(Exception e){
-            System.out.print("Error occurred while UPDATE Operation: " + e);
-            throw e;
-        }
-    }
-
-    /**
-     * Update Total Refund of a ReturnData object.
-     * @param returnDataID String, the ID of the ReturnData object.
-     * @param totalRefund String, refund that the old total refund will be changed to.
-     * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
-     */
-    public static void updateTotalRefund(String returnDataID, String totalRefund) throws SQLException{
-        String updateStmt =
-                "UPDATE ReturnData\n" +
-                        "SET TotalRefund = " + totalRefund + "\n" +
-                        "WHERE Client_ID = '" + returnDataID + "';";
-        try{
-            DB.update(updateStmt);
-        }catch(Exception e){
-            System.out.print("Error occurred while UPDATE Operation: " + e);
-            throw e;
-        }
-    }
-
-    /**
-     * Update EITC of a ReturnData object.
-     * @param returnDataID String, the ID of the ReturnData object.
-     * @param EITC String, EITC that the old EITC will be changed to.
-     * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
-     */
-    public static void updateEITC(String returnDataID, String EITC) throws SQLException{
-        String updateStmt =
-                "UPDATE ReturnData\n" +
-                        "SET EITC = " + EITC + "\n" +
-                        "WHERE Client_ID = '" + returnDataID + "';";
-        try{
-            DB.update(updateStmt);
-        }catch(Exception e){
-            System.out.print("Error occurred while UPDATE Operation: " + e);
-            throw e;
-        }
-    }
-
-    /**
-     * Update CTC of a ReturnData object.
-     * @param returnDataID String, the ID of the ReturnData object.
-     * @param CTC String, CTC that the old CTC will be changed to.
-     * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
-     */
-    public static void updateCTC(String returnDataID, String CTC) throws SQLException{
-        String updateStmt =
-                "UPDATE ReturnData\n" +
-                        "SET CTC = " + CTC + "\n" +
-                        "WHERE Client_ID = '" + returnDataID + "';";
-        try{
-            DB.update(updateStmt);
-        }catch(Exception e){
-            System.out.print("Error occurred while UPDATE Operation: " + e);
-            throw e;
-        }
-    }
-
-    /**
-     * Update Dependents of a ReturnData object.
-     * @param returnDataID String, the ID of the ReturnData object.
-     * @param dependents String, number of dependents that the old dependents will be changed to.
-     * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
-     */
-    public static void updateDependents(String returnDataID, String dependents) throws SQLException{
-        String updateStmt =
-                "UPDATE ReturnData\n" +
-                        "SET Dependents = " + dependents + "\n" +
-                        "WHERE Client_ID = '" + returnDataID + "';";
-        try{
-            DB.update(updateStmt);
-        }catch(Exception e){
-            System.out.print("Error occurred while UPDATE Operation: " + e);
-            throw e;
-        }
-    }
-
-    /**
-     * Update Survey Score of a ReturnData object.
-     * @param returnDataID String, the ID of the ReturnData object.
-     * @param surveyScore String, score that the old survey score will be changed to.
-     * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
-     */
-    public static void updateSurveyScore(String returnDataID, String surveyScore) throws SQLException{
-        String updateStmt =
-                "UPDATE ReturnData\n" +
-                        "SET SurveyScore = " + surveyScore + "\n" +
-                        "WHERE Client_ID = '" + returnDataID + "';";
-        try{
-            DB.update(updateStmt);
-        }catch(Exception e){
-            System.out.print("Error occurred while UPDATE Operation: " + e);
-            throw e;
+        } catch (Exception e) {
+            System.out.println("Unable to execute query: " + e);
         }
     }
 
 
     /*
-    TAX YEAR FUNCTIONS
+     * ==================================================================================
+     * TAX YEAR FUNCTIONS
+     * ==================================================================================
      */
 
     public static void insertTaxYear(HashMap<String, String> clientData){
         String taxYear = "";
-        if (clientData.containsKey("CREATEDDATETIME")){
-            taxYear = clientData.get("CREATEDDATETIME").substring(0, 4);
+        if (clientData.containsKey("TAXYEAR")){
+            taxYear = clientData.get("TAXYEAR");
         }
         if (!taxYear.equals("")){
-            try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM TaxYear WHERE TaxYear = %s;", taxYear))) {
-                // If the demographic already exists, there is no need to do anything else.
-                if (query.next()){
+            try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM TaxYear WHERE TAXYEAR = '%s';", taxYear))) {
+                // If the client already exists, update the necessary fields.
+                if (query.next()) {
                     // Reset pointer of the ResultSet (somewhat redundant since there should only be one or no elements
                     // but a good habit nonetheless).
                     query.beforeFirst();
-                }else {
+                } else {
                     // Create an update SQL command to insert a new row into the Client table.
-                    String sqlStmt = "INSERT INTO TaxYear (TaxYear)\n" +
-                                     "VALUES (" + taxYear + ");";
+                    String sqlStmt = "INSERT INTO TaxYear (TAXYEAR)\n" +
+                            "VALUES (" + taxYear + ");";
                     try {
                         // Execute the SQL statement.
                         DB.update(sqlStmt);
                     } catch (Exception e) {
                         System.out.print("Error occurred while UPDATE Operation: " + e);
-                        throw e;
                     }
                 }
-            }catch (Exception e){
-                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-                System.exit(0);
+            } catch (Exception e) {
+                System.out.println("Unable to insert Tax Year: " + e);
             }
         }
     }
 
+
+
+    /*
+    ==================================================================================
+    SEARCH/GET FUNCTIONS
+    ==================================================================================
+     */
 
     /**
      * Translates a result set into an ObservableList of Data Objects
@@ -631,15 +632,15 @@ public class DataBase {
             DataObject dataObject = new DataObject();
             if(demographic) {
                 dataObject.setId(rs.getString("Client_ID"));
-                dataObject.setTaxYear(rs.getInt("TaxYear"));
+                dataObject.setTaxYear(rs.getInt("TAXYEAR"));
                 dataObject.setZip(rs.getString("Zip"));
                 dataObject.setState(rs.getString("State"));
             }
             if(returnData){
-                dataObject.setFederal(rs.getBoolean("FederalReturn"));
-                dataObject.setRefund(rs.getInt("TotalRefund"));
-                dataObject.setEic(rs.getInt("EITC"));
-                dataObject.setChildTaxCredit(rs.getInt("CTC"));
+                dataObject.setFederal(rs.getBoolean("FEDERAL"));
+                dataObject.setRefund(rs.getInt("REFUND"));
+                dataObject.setEic(rs.getInt("EIC"));
+                dataObject.setChildTaxCredit(rs.getInt("CHILDTAXCREDIT"));
             }
             if(client){
                 dataObject.setFirstName(rs.getString("FirstName"));
@@ -650,7 +651,7 @@ public class DataBase {
             //This may not be a good way to set TaxYear
             //
             if(demographic || returnData || !client){
-                dataObject.setTaxYear(rs.getInt("TaxYear"));
+                dataObject.setTaxYear(rs.getInt("TAXYEAR"));
             }
             dataObjectList.add(dataObject);
         }
@@ -703,6 +704,7 @@ public class DataBase {
         try {
             ResultSet rsClients = DB.executeQuery(selectStmt);
             ObservableList<DataObject> clientList = getDataObjectList(rsClients, false, false, true);
+            System.out.println(clientList);
             return clientList;
         } catch (SQLException e) {
             System.out.println("SQL select operation has failed:" + e);
@@ -776,7 +778,7 @@ public class DataBase {
     }
 
     public static ObservableList<DataObject> searchDemographicsAndReturnDataAndClients(String condition) throws SQLException, ClassNotFoundException{
-        String selectStmt = "SELECT * FROM Demographic INNER JOIN ReturnData ON Demographic.TaxYear = ReturnData.TaxYear AND Demographic.Client_ID = ReturnData.Client_ID INNER JOIN Client ON Demographic.Client_ID = Client.ID" + condition;
+        String selectStmt = "SELECT * FROM Demographic INNER JOIN ReturnData ON Demographic.TAXYEAR = ReturnData.TAXYEAR AND Demographic.Client_ID = ReturnData.Client_ID INNER JOIN Client ON Demographic.Client_ID = Client.ID" + condition;
         System.out.println(selectStmt);
         try{
             ResultSet rsDemographics = DB.executeQuery(selectStmt);

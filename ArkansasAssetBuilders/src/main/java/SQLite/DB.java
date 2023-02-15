@@ -11,7 +11,7 @@ import java.sql.*;
 public class DB {
 
     private static Connection connection = null;
-    public static boolean isTest = false;
+    public static boolean isTest = true;
 
     /**
      * Method for setting up the connection between the program and the database. <br/>

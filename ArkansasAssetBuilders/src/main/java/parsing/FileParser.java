@@ -29,15 +29,14 @@ public class FileParser{
      * @param line A row from the data that contains the information for a single client.
      */
     void capitalizeNames(List<String> line){
-        String firstNameUpper = this.columnNames.contains("FIRST NAME")
-                ? line.get(getColumn("FIRST NAME")).toUpperCase()
+        String firstNameUpper = this.columnNames.contains("FIRSTNAME")
+                ? line.get(getColumn("FIRSTNAME")).toUpperCase()
                 : "";
-        System.out.println(firstNameUpper);
-        String lastNameUpper = line.get(getColumn("LAST NAME")).toUpperCase();
+        String lastNameUpper = line.get(getColumn("LASTNAME")).toUpperCase();
         if (!firstNameUpper.equals("")){
-            line.set(getColumn("FIRST NAME"), firstNameUpper);
+            line.set(getColumn("FIRSTNAME"), firstNameUpper);
         }
-        line.set(getColumn("LAST NAME"), lastNameUpper);
+        line.set(getColumn("LASTNAME"), lastNameUpper);
     }
 
     /**
@@ -46,10 +45,10 @@ public class FileParser{
      * @return String that is the ID for the client.
      */
     String createKey(List<String> line){
-        int lastNameColumn = getColumn("LAST NAME");
+        int lastNameColumn = getColumn("LASTNAME");
         int ssColumn = this.columnNames.contains("L4SSN")
                 ? getColumn("L4SSN")
-                : getColumn("LAST 4");
+                : getColumn("LAST4");
         return line.get(lastNameColumn).replaceAll(" ", "") + line.get(ssColumn);
     }
 
@@ -69,6 +68,7 @@ public class FileParser{
     List<String> getColumnNames(){
         List<String> columnNames = Arrays.asList(this.fileLines.get(0).split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"));
         columnNames.replaceAll(String::trim);
+        columnNames.replaceAll(s -> s.replaceAll("\\s+", ""));
         columnNames.replaceAll(s -> s.replaceAll("[^\\w\\s]", ""));
         columnNames.replaceAll(String::toUpperCase);
         return columnNames;
@@ -107,14 +107,14 @@ public class FileParser{
                 List<String> splitLine = removeCommas(this.fileLines.get(line));
                 splitLine.replaceAll(String::trim);
                 capitalizeNames(splitLine);
-                if (this.columnNames.contains("DOB") || this.columnNames.contains("DATE OF BIRTH")) {
-                    reformatDOB(splitLine, splitLine.contains("DOB")
+                if (this.columnNames.contains("DOB") || this.columnNames.contains("DATEOFBIRTH")) {
+                    reformatDOB(splitLine, this.columnNames.contains("DOB")
                             ? getColumn("DOB")
-                            : getColumn("DATE OF BIRTH"));
+                            : getColumn("DATEOFBIRTH"));
                 }
                 reformatSS(splitLine, this.columnNames.contains("L4SSN")
                            ? getColumn("L4SSN")
-                           : getColumn("LAST 4"));
+                           : getColumn("LAST4"));
                 String clientKey = createKey(splitLine);
                 this.data.put(clientKey, new HashMap<>());
                 for (int column = 0; column < splitLine.size(); column++){
@@ -131,13 +131,15 @@ public class FileParser{
      * @param dobColumn Column that contains the date of birth of the client.
      */
      void reformatDOB(List<String> line, int dobColumn){
-        String[] dob = line.get(dobColumn).split("/");
-        for (int idx = 0; idx < dob.length - 1; idx++){
-            if (dob[idx].length() < 2){
-                dob[idx] = "0" + dob[idx];
-            }
-        }
-        line.set(dobColumn, String.join("/", dob));
+         if (!line.get(dobColumn).equals("")){
+             String[] dob = line.get(dobColumn).split("/");
+             for (int idx = 0; idx < dob.length - 1; idx++){
+                 if (dob[idx].length() < 2){
+                     dob[idx] = "0" + dob[idx];
+                 }
+             }
+             line.set(dobColumn, String.join("/", dob));
+         }
     }
 
     /**
@@ -168,8 +170,12 @@ public class FileParser{
         List<String> newLine = Arrays.asList(line.strip().split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"));
         newLine.replaceAll(s -> s.replaceAll("[\",]", ""));
         for (int value = 0; value < newLine.size(); value ++){
-            if (newLine.get(value).contains("Sum")){
-                newLine.set(value, newLine.get(value).substring(6));
+            String lineValue = newLine.get(value);
+            if (lineValue.contains("Sum")){
+                newLine.set(value, lineValue.substring(6));
+            }
+            else if (lineValue.contains("$")){
+                newLine.set(value, lineValue.substring(1, lineValue.length() - 4));
             }
         }
         return newLine;
@@ -180,6 +186,6 @@ public class FileParser{
      * @param ss String containing last four digits of Social Security number.
      * @return Reformatted last four digits of Social Security number.
      */
-    String removeXChars(String ss){return ss.substring(ss.length()-4);}
+    String removeXChars(String ss){return ss.substring(ss.length() - 4);}
 
 }

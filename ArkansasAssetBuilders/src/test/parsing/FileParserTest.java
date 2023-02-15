@@ -11,7 +11,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class FileParserTest {
 
     File testFile = new File("./ArkansasAssetBuilders/src/test/testDataExamples/exampleData1.csv").getCanonicalFile();
+    File actual = new File("C:\\Users\\astoy\\Documents\\GitHub\\AABDataExamples\\S28011390_TY2020 Paper_Site Production Detail Report - Paper_01_09_2021_112338.csv").getCanonicalFile();
     FileParser parserObject = new FileParser(testFile);
+    FileParser par = new FileParser(actual);
     FileParserTest() throws IOException {
     }
 
@@ -35,13 +37,16 @@ class FileParserTest {
     void getColumnNames() {
         List<String> columnNames = Arrays.asList("EFIN","Last 4","Preparer Name","Agency ID","Return Type","Residency",
                                                  "FilingStatus","First Name","Last Name","Ack Code","Refund",
-                                                 "Balance Due","State Withholding","State EIC","State Tax Liability");
+                                                 "Balance Due","State Withholding","State EIC","State Tax Liability",
+                                                 "Created Date Time", "Zip", "State");
         columnNames.replaceAll(String::toUpperCase);
+        columnNames.replaceAll(s -> s.replaceAll("\\s+", ""));
         assertEquals(columnNames, parserObject.getColumnNames());
     }
 
     @Test
     void parseCSV() {
+        System.out.println(par.data);
     }
 
     @Test
