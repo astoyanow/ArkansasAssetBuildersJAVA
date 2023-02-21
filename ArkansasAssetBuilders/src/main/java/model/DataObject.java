@@ -601,11 +601,11 @@ public class DataObject{
 	public DoubleProperty personsAge65PlusProperty(){return question.personsAge65PlusProperty();}
 
 
-	public double getTaxYear(){return taxYear.getTaxYear();}
+	public int getTaxYear(){return taxYear.getTaxYear();}
 
-	public void setTaxYear(double year){taxYear.setTaxYear(year);}
+	public void setTaxYear(int year){taxYear.setTaxYear(year);}
 
-	public DoubleProperty taxYearProperty(){return taxYear.taxYearProperty();}
+	public IntegerProperty taxYearProperty(){return taxYear.taxYearProperty();}
 
 
 }

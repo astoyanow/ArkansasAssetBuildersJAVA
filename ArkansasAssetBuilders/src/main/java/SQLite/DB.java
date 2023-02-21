@@ -139,6 +139,7 @@ public class DB {
         connect();
         DatabaseMetaData meta = connection.getMetaData();
         ResultSet resultSet = meta.getTables(null,null,null,new String[]{"Table"});
+        disconnect();
         return resultSet.next();
     }
 

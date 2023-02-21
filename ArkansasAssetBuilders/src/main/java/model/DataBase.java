@@ -90,7 +90,7 @@ public class DataBase {
                     : clientData.get("DATEOFBIRTH");
         }
         // Get the row where the clientID exists in the Client table (if it does exist).
-        try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM Client WHERE ID = '%s';", clientID))) {
+        try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM CLIENT WHERE ID = '%s';", clientID))) {
             // If the client already exists, update the necessary fields.
             if (query.next()){
                 // Reset pointer of the ResultSet (somewhat redundant since there should only be one or no elements
@@ -116,7 +116,7 @@ public class DataBase {
                 updateLast4SS(clientID, String.valueOf(last4SS));
             }else {
                 // Create an update SQL command to insert a new row into the Client table.
-                String sqlStmt = String.format("INSERT INTO Client (ID, FirstName, LastName, DoB, Last4SS, EFIN, SIDN)"
+                String sqlStmt = String.format("INSERT INTO CLIENT (ID, FIRSTNAME, LASTNAME, DOB, L4SSN, EFIN, SIDN)"
                                 + "\n" + "VALUES ('%1$s', '%2$s', '%3$s', '%4$s', %5$d, '%6$s', '%7$s');", clientID,
                                 firstName, lastName, dob, last4SS, EFIN, SIDN);
                 try {
@@ -140,8 +140,8 @@ public class DataBase {
      */
     private static void updateFirstName(String clientID, String firstName) throws SQLException{
         String updateStmt =
-                "UPDATE Client\n" +
-                        "SET FirstName = '" + firstName + "'\n" +
+                "UPDATE CLIENT\n" +
+                        "SET FIRSTNAME = '" + firstName + "'\n" +
                         "WHERE ID = '" + clientID + "';";
         System.out.println(updateStmt);
         try{
@@ -160,8 +160,8 @@ public class DataBase {
      */
     private static void updateLastName(String clientID, String lastName) throws SQLException{
         String updateStmt =
-                "UPDATE Client\n" +
-                        "SET LastName = '" + lastName + "'\n" +
+                "UPDATE CLIENT\n" +
+                        "SET LASTNAME = '" + lastName + "'\n" +
                         "WHERE ID = '" + clientID + "';";
         try{
             DB.update(updateStmt);
@@ -179,8 +179,8 @@ public class DataBase {
      */
     private static void updateDOB(String clientID, String dob) throws SQLException{
         String updateStmt =
-                "UPDATE Client\n" +
-                        "SET DoB = '" + dob + "'\n" +
+                "UPDATE CLIENT\n" +
+                        "SET DOB = '" + dob + "'\n" +
                         "WHERE ID = '" + clientID + "';";
         try{
             DB.update(updateStmt);
@@ -198,8 +198,8 @@ public class DataBase {
      */
     private static void updateLast4SS(String clientID, String last4SS) throws SQLException{
         String updateStmt =
-                "UPDATE Client\n" +
-                        "SET Last4SS = " + last4SS + "\n" +
+                "UPDATE CLIENT\n" +
+                        "SET L4SSN = " + last4SS + "\n" +
                         "WHERE ID = '" + clientID + "';";
         try{
             DB.update(updateStmt);
@@ -217,7 +217,7 @@ public class DataBase {
      */
     private static void updateEFIN(String clientID, String efin) throws SQLException{
         String updateStmt =
-                "UPDATE Client\n" +
+                "UPDATE CLIENT\n" +
                         "SET EFIN = '" + efin + "'\n" +
                         "WHERE ID = '" + clientID + "';";
         try{
@@ -236,7 +236,7 @@ public class DataBase {
      */
     private static void updateSIDN(String clientID, String sidn) throws SQLException{
         String updateStmt =
-                "UPDATE Client\n" +
+                "UPDATE CLIENT\n" +
                         "SET SIDN = '" + sidn + "'\n" +
                         "WHERE ID = '" + clientID + "';";
         try{
@@ -267,7 +267,7 @@ public class DataBase {
     static HashMap<String, String> demoFieldMap = new HashMap<>();
 
     /**
-     * Insert a demographic into the Demographic table of the database.
+     * Insert a demographic into the DEMOGRAPHIC table of the database.
      * Inserts a demographic if the demographic associated with the clientID
      * does not already exist, otherwise the demographic with the associated
      * clientID is updated.
@@ -279,48 +279,65 @@ public class DataBase {
         // Not guaranteed that each field is in clientData, so must instantiate variables.
         for (String field: clientData.keySet()){
             if (Arrays.asList(demoFields).contains(field)){
-                demoFieldMap.put(field, clientData.get(field));
+                if (field.equals("PRIMARYORSECONDARY60")){
+                    demoFieldMap.put("PRIMARYSECONDARY60PLUS", clientData.get(field));
+                } else {
+                    demoFieldMap.put(field, clientData.get(field));
+                }
             }
         }
-        System.out.println(demoFieldMap);
-        StringBuilder insertStmt = new StringBuilder("INSERT INTO Demographic (Client_ID");
-        StringBuilder intoStmt = new StringBuilder("VALUES ('" + clientID + "'");
-        if(!demoFieldMap.isEmpty()){
-            for (String field: demoFieldMap.keySet()){
-                if (!demoFieldMap.get(field).equals("")){
-                    insertStmt.append(", ").append(field);
-                    if (isNumeric(demoFieldMap.get(field))){
-                        intoStmt.append(", ").append(demoFieldMap.get(field));
-                    }else{
-                        intoStmt.append(", ").append("'").append(demoFieldMap.get(field)).append("'");
+        try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM DEMOGRAPHIC WHERE CLIENTID = '%1$s'" +
+                        "AND TAXYEAR = '%2$s';",
+                clientID,
+                clientData.get("TAXYEAR")))) {
+            // If the client already exists, update the necessary fields.
+            if (query.next()) {
+                // Reset pointer of the ResultSet (somewhat redundant since there should only be one or no elements
+                // but a good habit nonetheless).
+                query.beforeFirst();
+            } else {
+                StringBuilder insertStmt = new StringBuilder("INSERT INTO DEMOGRAPHIC (CLIENTID");
+                StringBuilder intoStmt = new StringBuilder("VALUES ('" + clientID + "'");
+                if (!demoFieldMap.isEmpty()) {
+                    for (String field : demoFieldMap.keySet()) {
+                        if (!demoFieldMap.get(field).equals("")) {
+                            insertStmt.append(", ").append(field);
+                            if (isNumeric(demoFieldMap.get(field))) {
+                                intoStmt.append(", ").append(demoFieldMap.get(field));
+                            } else {
+                                intoStmt.append(", ").append("'").append(demoFieldMap.get(field)).append("'");
+                            }
+                        }
+                    }
+                    insertStmt.append(") \n");
+                    intoStmt.append((");"));
+                    try {
+                        // Execute the SQL statement.
+                        DB.update(insertStmt + intoStmt.toString());
+                    } catch (Exception e) {
+                        System.out.print("Error occurred while UPDATE Operation: " + e);
+                        throw e;
                     }
                 }
             }
-            insertStmt.append(") \n");
-            intoStmt.append((");"));
-            try {
-                // Execute the SQL statement.
-                DB.update(insertStmt + intoStmt.toString());
-            } catch (Exception e) {
-                System.out.print("Error occurred while UPDATE Operation: " + e);
-                throw e;
-            }
+        } catch (Exception e) {
+            System.out.println("Unable to execute DEMOGRAPHIC query: " + e);
         }
     }
 
 
     /**
-     * Update State of a Demographic.
-     * @param demographicID String, the ID of the Demographic.
+     * Update State of a DEMOGRAPHIC.
+     * @param demographicID String, the ID of the DEMOGRAPHIC.
      * @param ps60p String, number representing sum of 60+ year olds between the primary
      *              and secondary filers.
      * @throws SQLException Unable to retrieve data, loss of connection, or other errors.
      */
     public static void updatePrimarySecondary60Plus(String demographicID, String ps60p) throws SQLException{
         String updateStmt =
-                "UPDATE Demographic\n" +
-                        "SET PrimarySecondary60Plus = '" + ps60p + "'\n" +
-                        "WHERE Client_ID = '" + demographicID + "';";
+                "UPDATE DEMOGRAPHIC\n" +
+                        "SET PRIMARYSECONDARY60PLUS = '" + ps60p + "'\n" +
+                        "WHERE CLIENTID = '" + demographicID + "';";
         try{
             DB.update(updateStmt);
         }catch(Exception e){
@@ -460,28 +477,42 @@ public class DataBase {
                 }
             }
         }
-        StringBuilder insertStmt = new StringBuilder("INSERT INTO Question (Client_ID");
-        StringBuilder intoStmt = new StringBuilder("VALUES ('" + clientID + "'");
-        if(!questionFieldMap.isEmpty()){
-            for (String field: questionFieldMap.keySet()){
-                if (!questionFieldMap.get(field).equals("")){
-                    insertStmt.append(", ").append(field);
-                    if (isNumeric(questionFieldMap.get(field))){
-                        intoStmt.append(", ").append(questionFieldMap.get(field));
-                    }else{
-                        intoStmt.append(", ").append("'").append(questionFieldMap.get(field)).append("'");
+        try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM QUESTION WHERE CLIENTID = '%1$s'" +
+                        "AND TAXYEAR = '%2$s';",
+                clientID,
+                clientData.get("TAXYEAR")))) {
+            // If the client already exists, update the necessary fields.
+            if (query.next()) {
+                // Reset pointer of the ResultSet (somewhat redundant since there should only be one or no elements
+                // but a good habit nonetheless).
+                query.beforeFirst();
+            } else {
+                StringBuilder insertStmt = new StringBuilder("INSERT INTO QUESTION (CLIENTID");
+                StringBuilder intoStmt = new StringBuilder("VALUES ('" + clientID + "'");
+                if (!questionFieldMap.isEmpty()) {
+                    for (String field : questionFieldMap.keySet()) {
+                        if (!questionFieldMap.get(field).equals("")) {
+                            insertStmt.append(", ").append(field);
+                            if (isNumeric(questionFieldMap.get(field))) {
+                                intoStmt.append(", ").append(questionFieldMap.get(field));
+                            } else {
+                                intoStmt.append(", ").append("'").append(questionFieldMap.get(field)).append("'");
+                            }
+                        }
+                    }
+                    insertStmt.append(") \n");
+                    intoStmt.append((");"));
+                    System.out.println(insertStmt + intoStmt.toString());
+                    try {
+                        // Execute the SQL statement.
+                        DB.update(insertStmt + intoStmt.toString());
+                    } catch (Exception e) {
+                        System.out.print("Error occurred while UPDATE Operation: " + e);
                     }
                 }
             }
-            insertStmt.append(") \n");
-            intoStmt.append((");"));
-            System.out.println(insertStmt + intoStmt.toString());
-            try {
-                // Execute the SQL statement.
-                DB.update(insertStmt + intoStmt.toString());
-            } catch (Exception e) {
-                System.out.print("Error occurred while UPDATE Operation: " + e);
-            }
+        } catch (Exception e) {
+            System.out.println("Unable to execute QUESTION query: " + e);
         }
     }
 
@@ -551,10 +582,17 @@ public class DataBase {
     public static void insertReturnData(HashMap<String, String> clientData, String clientID){
         for (String field: clientData.keySet()){
             if (Arrays.asList(returnDataFields).contains(field)){
-                returnFieldMap.put(field, clientData.get(field));
+                switch (field) {
+                    case "PAPERFEDERAL" -> returnFieldMap.put("PAPERFED", clientData.get(field));
+                    case "SAVINGSBONDS" -> returnFieldMap.put("POUNDSAVINGSBONDS", clientData.get(field));
+                    case "SAVINGBOND" -> returnFieldMap.put("SAVINGSBONDS", clientData.get(field));
+                    case "TOTALRESPPYMENT" -> returnFieldMap.put("TOTALRESPPAYMENT", clientData.get(field));
+                    case "CREATEDDATETIME" -> returnFieldMap.put("CREATEDDATE", clientData.get(field));
+                    default -> returnFieldMap.put(field, clientData.get(field));
+                }
             }
         }
-        try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM ReturnData WHERE Client_ID = '%1$s'" +
+        try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM RETURNDATA WHERE CLIENTID = '%1$s'" +
                                                              "AND TAXYEAR = '%2$s' AND FEDERAL = '%3$s';",
                                                       clientID,
                                                       clientData.get("TAXYEAR"),
@@ -565,7 +603,7 @@ public class DataBase {
                 // but a good habit nonetheless).
                 query.beforeFirst();
             }else{
-                StringBuilder insertStmt = new StringBuilder("INSERT INTO ReturnData (Client_ID");
+                StringBuilder insertStmt = new StringBuilder("INSERT INTO RETURNDATA (CLIENTID");
                 StringBuilder intoStmt = new StringBuilder("VALUES ('" + clientID + "'");
                 if (!returnFieldMap.isEmpty()) {
                     for (String field : returnFieldMap.keySet()) {
@@ -589,7 +627,7 @@ public class DataBase {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Unable to execute query: " + e);
+            System.out.println("Unable to execute RETURNDATA query: " + e);
         }
     }
 
@@ -606,7 +644,7 @@ public class DataBase {
             taxYear = clientData.get("TAXYEAR");
         }
         if (!taxYear.equals("")){
-            try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM TaxYear WHERE TAXYEAR = '%s';", taxYear))) {
+            try (ResultSet query = DB.executeQuery(String.format("SELECT * FROM TAXYEAR WHERE TAXYEAR = '%s';", taxYear))) {
                 // If the client already exists, update the necessary fields.
                 if (query.next()) {
                     // Reset pointer of the ResultSet (somewhat redundant since there should only be one or no elements
@@ -614,7 +652,7 @@ public class DataBase {
                     query.beforeFirst();
                 } else {
                     // Create an update SQL command to insert a new row into the Client table.
-                    String sqlStmt = "INSERT INTO TaxYear (TAXYEAR)\n" +
+                    String sqlStmt = "INSERT INTO TAXYEAR (TAXYEAR)\n" +
                             "VALUES (" + taxYear + ");";
                     try {
                         // Execute the SQL statement.
@@ -651,10 +689,10 @@ public class DataBase {
         while(rs.next()){
             DataObject dataObject = new DataObject();
             if(demographic) {
-                dataObject.setId(rs.getString("Client_ID"));
+                dataObject.setId(rs.getString("CLIENTID"));
                 dataObject.setTaxYear(rs.getInt("TAXYEAR"));
-                dataObject.setZip(rs.getString("Zip"));
-                dataObject.setState(rs.getString("State"));
+                dataObject.setZip(rs.getString("ZIP"));
+                dataObject.setState(rs.getString("STATE"));
             }
             if(returnData){
                 dataObject.setFederal(rs.getBoolean("FEDERAL"));
@@ -663,12 +701,12 @@ public class DataBase {
                 dataObject.setChildTaxCredit(rs.getInt("CHILDTAXCREDIT"));
             }
             if(client){
-                dataObject.setFirstName(rs.getString("FirstName"));
-                dataObject.setLastName(rs.getString("LastName"));
-                dataObject.setDoB(rs.getString("DoB"));
-                dataObject.setL4SSN(rs.getString("Last4SS"));
+                dataObject.setFirstName(rs.getString("FIRSTNAME"));
+                dataObject.setLastName(rs.getString("LASTNAME"));
+                dataObject.setDoB(rs.getString("DOB"));
+                dataObject.setL4SSN(rs.getString("L4SSN"));
             }
-            //This may not be a good way to set TaxYear
+            //This may not be a good way to set TAXYEAR
             //
             if(demographic || returnData || !client){
                 dataObject.setTaxYear(rs.getInt("TAXYEAR"));
@@ -687,7 +725,7 @@ public class DataBase {
      * @throws ClassNotFoundException Client class unable to be found.
      */
     public static Client searchClient(String ID) throws SQLException, ClassNotFoundException{
-        String selectStmt = "SELECT * From Client WHERE ID = " + ID;
+        String selectStmt = "SELECT * From CLIENT WHERE ID = " + ID;
 
         try{
             ResultSet rs = DB.executeQuery(selectStmt);
@@ -703,10 +741,10 @@ public class DataBase {
         if(rs.next()){
             client = new Client();
             client.setId(rs.getString("ID"));
-            client.setFirstName(rs.getString("FirstName"));
-            client.setLastName(rs.getString("LastName"));
-            client.setDoB(rs.getString("DoB"));
-            client.setL4SSN(rs.getString("Last4SS"));
+            client.setFirstName(rs.getString("FIRSTNAME"));
+            client.setLastName(rs.getString("LASTNAME"));
+            client.setDoB(rs.getString("DOB"));
+            client.setL4SSN(rs.getString("L4SSN"));
         }
         return client;
     }
@@ -719,7 +757,7 @@ public class DataBase {
      * @throws ClassNotFoundException
      */
     public static ObservableList<DataObject> searchClients(String condition) throws SQLException, ClassNotFoundException {
-        String selectStmt = "SELECT * FROM Client" + condition;
+        String selectStmt = "SELECT * FROM CLIENT" + condition;
         System.out.println(selectStmt);
         try {
             ResultSet rsClients = DB.executeQuery(selectStmt);
@@ -733,7 +771,7 @@ public class DataBase {
     }
 
     public static ObservableList<DataObject> searchDemographics(String condition) throws SQLException, ClassNotFoundException{
-        String selectStmt = "SELECT * FROM Demographic " + condition;
+        String selectStmt = "SELECT * FROM DEMOGRAPHIC " + condition;
         System.out.println(selectStmt);
         try{
             ResultSet rsDemographics = DB.executeQuery(selectStmt);
@@ -746,7 +784,7 @@ public class DataBase {
     }
 
     public static ObservableList<DataObject> searchReturnData(String condition) throws SQLException, ClassNotFoundException{
-        String selectStmt = "SELECT * FROM ReturnData " + condition;
+        String selectStmt = "SELECT * FROM RETURNDATA " + condition;
         System.out.println(selectStmt);
         try{
             ResultSet rsDemographics = DB.executeQuery(selectStmt);
@@ -759,7 +797,7 @@ public class DataBase {
     }
 
     public static ObservableList<DataObject> searchDemographicsAndReturnData(String condition) throws SQLException, ClassNotFoundException{
-        String selectStmt = "SELECT * FROM Demographic INNER JOIN ReturnData ON Demographic.TaxYear = ReturnData.TaxYear AND Demographic.Client_ID = ReturnData.Client_ID" + condition;
+        String selectStmt = "SELECT * FROM DEMOGRAPHIC INNER JOIN RETURNDATA ON DEMOGRAPHIC.TAXYEAR = RETURNDATA.TAXYEAR AND DEMOGRAPHIC.CLIENTID = RETURNDATA.CLIENTID" + condition;
         System.out.println(selectStmt);
         try{
             ResultSet rsDemographics = DB.executeQuery(selectStmt);
@@ -772,7 +810,7 @@ public class DataBase {
     }
 
     public static ObservableList<DataObject> searchDemographicsAndClients(String condition) throws SQLException, ClassNotFoundException{
-        String selectStmt = "SELECT * FROM Demographic INNER JOIN Client ON Demographic.Client_ID = Client.ID" + condition;
+        String selectStmt = "SELECT * FROM DEMOGRAPHIC INNER JOIN CLIENT ON DEMOGRAPHIC.CLIENTID = ID" + condition;
         System.out.println(selectStmt);
         try{
             ResultSet rsDemographics = DB.executeQuery(selectStmt);
@@ -785,7 +823,7 @@ public class DataBase {
     }
 
     public static ObservableList<DataObject> searchReturnDataAndClients(String condition) throws SQLException, ClassNotFoundException{
-        String selectStmt = "SELECT * FROM ReturnData INNER JOIN Client ON ReturnData.Client_ID = Client.ID" + condition;
+        String selectStmt = "SELECT * FROM RETURNDATA INNER JOIN CLIENT ON RETURNDATA.CLIENTID = ID" + condition;
         System.out.println(selectStmt);
         try{
             ResultSet rsDemographics = DB.executeQuery(selectStmt);
@@ -798,7 +836,7 @@ public class DataBase {
     }
 
     public static ObservableList<DataObject> searchDemographicsAndReturnDataAndClients(String condition) throws SQLException, ClassNotFoundException{
-        String selectStmt = "SELECT * FROM Demographic INNER JOIN ReturnData ON Demographic.TAXYEAR = ReturnData.TAXYEAR AND Demographic.Client_ID = ReturnData.Client_ID INNER JOIN Client ON Demographic.Client_ID = Client.ID" + condition;
+        String selectStmt = "SELECT * FROM DEMOGRAPHIC INNER JOIN RETURNDATA ON DEMOGRAPHIC.TAXYEAR = RETURNDATA.TAXYEAR AND DEMOGRAPHIC.CLIENTID = RETURNDATA.CLIENTID INNER JOIN CLIENT ON DEMOGRAPHIC.CLIENTID = ID" + condition;
         System.out.println(selectStmt);
         try{
             ResultSet rsDemographics = DB.executeQuery(selectStmt);
@@ -811,7 +849,7 @@ public class DataBase {
     }
 
     public static ObservableList<DataObject> searchTaxYears(String condition) throws SQLException, ClassNotFoundException{
-        String selectStmt = "SELECT * FROM TaxYear" + condition;
+        String selectStmt = "SELECT * FROM TAXYEAR" + condition;
         System.out.println(selectStmt);
         try {
             ResultSet rsClients = DB.executeQuery(selectStmt);
