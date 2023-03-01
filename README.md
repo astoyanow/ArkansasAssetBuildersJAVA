@@ -16,23 +16,12 @@ Follow the instructions of the desired option to download Java to your computer.
 
 
 ## Usage
-For developers, the application can be launched by running the Launcher class in 
-src/main/java/com.aab.arkansasassetbuilders or by editing run configurations. For 
-the latter, the developer can select the drop-down menu in the toolbar near 
-the Run button and select <code>Edit Configurations...</code>. In the menu, 
-select the <code>+</code> at the top left of the pop-up window to <code> 
-Add New Configuration</code> and select 'Application.' The SDK should be preloaded 
-from the project settings. Give the run configuration a name and for the Main class field, 
-click the button on the right side of the text field and select Launcher as the Main class. 
-You should then be able to run the application.
-
-For non-developers, the program contains a Java Archive (JAR) file that contains all 
+The program contains a Java Archive (JAR) file that contains all 
 the necessary libraries to run the application without needing to open the project in 
 an Integrated Development Environment (IDE). The 
 *ArkansasAssetBuilders/out/artifacts/ArkansasAssetBuilders_jar* folder contains the .jar to launch the program. 
 The user can launch the application by double-clicking on the .jar file in a File Explorer
-(Finder on Mac) or by opening a Command Prompt/Terminal and entering
-<code> java -jar <path_to_.jar_file></code>.
+(Finder on Mac).
 ### Upload Screen
 Once the application is opened, the user will be directed to an upload screen where users can upload the Excel files containing user tax return information.
 The screen includes:

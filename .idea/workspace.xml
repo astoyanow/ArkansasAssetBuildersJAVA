@@ -10,31 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6504dace-0805-4e82-a203-a82141b6da21" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/ArkansasAssetBuildersJAVA.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/ArkansasAssetBuildersJAVA_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/xerial_sqlite_jdbc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/artifacts/ArkansasAssetBuildersJAVA_jar/ArkansasAssetBuildersJAVA.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/production/ArkansasAssetBuildersJAVA/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/production/ArkansasAssetBuildersJAVA/com/aab/arkansasassetbuilders/HelloScreen.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/production/ArkansasAssetBuildersJAVA/com/aab/arkansasassetbuilders/SearchAndFilterScreen.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/production/ArkansasAssetBuildersJAVA/com/aab/arkansasassetbuilders/UploadScreen.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/test/ArkansasAssetBuildersJAVA/AABTest.db" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/test/ArkansasAssetBuildersJAVA/AABTest.sqbpro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/test/ArkansasAssetBuildersJAVA/testDataExamples/exampleData1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/src/main/java/SQLite/DB.java" beforeDir="false" afterPath="$PROJECT_DIR$/ArkansasAssetBuilders/src/main/java/SQLite/DB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/src/main/java/model/DataBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/ArkansasAssetBuilders/src/main/java/model/DataBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/ArkansasAssetBuilders/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuildersJAVA.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ArkansasAssetBuildersJAVA.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
