@@ -8,6 +8,6 @@ module com.aab.arkansasassetbuilders {
     requires org.xerial.sqlitejdbc;
 
 
-    opens com.aab.arkansasassetbuilders to javafx.fxml;
+    opens com.aab.arkansasassetbuilders;
     exports com.aab.arkansasassetbuilders;
 }

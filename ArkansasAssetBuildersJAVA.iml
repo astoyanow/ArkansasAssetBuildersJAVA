@@ -9,7 +9,7 @@
       <excludeFolder url="file://$MODULE_DIR$/ArkansasAssetBuilders/target" />
       <excludeFolder url="file://$MODULE_DIR$/ArkansasAssetBuilders/out" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="19" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="lib" level="application" />
     <orderEntry type="module-library" scope="TEST">
@@ -28,8 +28,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="xerial.sqlite.jdbc1" level="application" />
-    <orderEntry type="library" name="xerial.sqlite.jdbc" level="project" />
-    <orderEntry type="library" name="javafx19" level="application" />
+    <orderEntry type="library" exported="" name="xerial.sqlite.jdbc" level="application" />
   </component>
 </module>

@@ -23,9 +23,9 @@ public class DB {
         try {
             Class.forName("org.sqlite.JDBC");
             if (isTest){
-                connection = DriverManager.getConnection("jdbc:sqlite:ArkansasAssetBuilders/src/test/AABTest.db");
+                connection = DriverManager.getConnection("jdbc:sqlite:src/test/AABTest.db");
             }else{
-                connection = DriverManager.getConnection("jdbc:sqlite:ArkansasAssetBuilders/src/AAB.db");
+                connection = DriverManager.getConnection("jdbc:sqlite:src/AAB.db");
             }
         } catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -37,7 +37,7 @@ public class DB {
     public static void connectTest(){
         try {
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:ArkansasAssetBuilders/src/test/AABTest.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:src/test/AABTest.db");
         } catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
             System.exit(0);

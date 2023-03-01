@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="ArkansasAssetBuildersJAVA:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6504dace-0805-4e82-a203-a82141b6da21" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ArkansasAssetBuildersJAVA.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/ArkansasAssetBuildersJAVA_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/xerial_sqlite_jdbc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/artifacts/ArkansasAssetBuildersJAVA_jar/ArkansasAssetBuildersJAVA.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/production/ArkansasAssetBuildersJAVA/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/production/ArkansasAssetBuildersJAVA/com/aab/arkansasassetbuilders/HelloScreen.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/production/ArkansasAssetBuildersJAVA/com/aab/arkansasassetbuilders/SearchAndFilterScreen.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/production/ArkansasAssetBuildersJAVA/com/aab/arkansasassetbuilders/UploadScreen.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/test/ArkansasAssetBuildersJAVA/AABTest.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/test/ArkansasAssetBuildersJAVA/AABTest.sqbpro" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/out/test/ArkansasAssetBuildersJAVA/testDataExamples/exampleData1.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/src/main/java/SQLite/DB.java" beforeDir="false" afterPath="$PROJECT_DIR$/ArkansasAssetBuilders/src/main/java/SQLite/DB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/src/main/java/model/DataBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/ArkansasAssetBuilders/src/main/java/model/DataBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuilders/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/ArkansasAssetBuilders/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArkansasAssetBuildersJAVA.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ArkansasAssetBuildersJAVA.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="columnNames" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="LogFilters">
+    <option name="FILTER_ERRORS" value="false" />
+    <option name="FILTER_WARNINGS" value="false" />
+    <option name="FILTER_INFO" value="true" />
+    <option name="FILTER_DEBUG" value="true" />
+    <option name="CUSTOM_FILTER" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2IJmGTlWvEOsGWmrgy4s8EFR3Qu" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+    <option name="showVisibilityIcons" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Git.Branch.Popup.ShowAllRemotes": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "C:/Users/astoy/Documents/GitHub/ArkansasAssetBuildersJAVA/ArkansasAssetBuilders",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15527344",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.runner"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\astoy\Documents\GitHub\ArkansasAssetBuildersJAVA\ArkansasAssetBuilders\src\main\java\model" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="model" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Launcher">
+    <configuration name="Launcher" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.aab.arkansasassetbuilders.Launcher" />
+      <module name="ArkansasAssetBuildersJAVA" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FileParserTest.capitalizeNames" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ArkansasAssetBuildersJAVA" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="parsing.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="parsing" />
+      <option name="MAIN_CLASS_NAME" value="parsing.FileParserTest" />
+      <option name="METHOD_NAME" value="capitalizeNames" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FileParserTest.parseCSV" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ArkansasAssetBuildersJAVA" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="parsing.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="parsing" />
+      <option name="MAIN_CLASS_NAME" value="parsing.FileParserTest" />
+      <option name="METHOD_NAME" value="parseCSV" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FileParserTest.removeCommas" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ArkansasAssetBuildersJAVA" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="parsing.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="parsing" />
+      <option name="MAIN_CLASS_NAME" value="parsing.FileParserTest" />
+      <option name="METHOD_NAME" value="removeCommas" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ArkansasAssetBuildersJAVA.jar" type="JarApplication" temporary="true">
+      <output_file is_save="true" />
+      <log_file alias="jarLog" path="$PROJECT_DIR$/ArkansasAssetBuilders/out/logs" />
+      <option name="JAR_PATH" value="$PROJECT_DIR$/ArkansasAssetBuilders/out/artifacts/ArkansasAssetBuildersJAVA_jar/ArkansasAssetBuildersJAVA.jar" />
+      <option name="PROGRAM_PARAMETERS" value="--module-path &quot;C:\JavaFX\javafx-sdk-19\lib&quot; --add-modules javafx.controls,javafx.fxml" />
+      <option name="WORKING_DIRECTORY" value="$ProjectFileDir$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="19" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.Launcher" />
+      <item itemvalue="JAR Application.ArkansasAssetBuildersJAVA.jar" />
+      <item itemvalue="JUnit.FileParserTest.capitalizeNames" />
+      <item itemvalue="JUnit.FileParserTest.parseCSV" />
+      <item itemvalue="JUnit.FileParserTest.removeCommas" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JAR Application.ArkansasAssetBuildersJAVA.jar" />
+        <item itemvalue="Application.Launcher" />
+        <item itemvalue="JUnit.FileParserTest.parseCSV" />
+        <item itemvalue="JUnit.FileParserTest.removeCommas" />
+        <item itemvalue="JUnit.FileParserTest.capitalizeNames" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6504dace-0805-4e82-a203-a82141b6da21" name="Changes" comment="" />
+      <created>1669907969757</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1669907969757</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

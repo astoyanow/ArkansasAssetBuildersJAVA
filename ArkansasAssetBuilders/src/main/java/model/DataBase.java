@@ -762,7 +762,6 @@ public class DataBase {
         try {
             ResultSet rsClients = DB.executeQuery(selectStmt);
             ObservableList<DataObject> clientList = getDataObjectList(rsClients, false, false, true);
-            System.out.println(clientList);
             return clientList;
         } catch (SQLException e) {
             System.out.println("SQL select operation has failed:" + e);
